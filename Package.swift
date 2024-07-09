@@ -5,19 +5,33 @@ import PackageDescription
 
 let package = Package(
     name: "GodotSwiftTree",
+    platforms: [
+        .macOS(.v13),
+    ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "GodotSwiftTree",
-            targets: ["GodotSwiftTree"]),
+        .plugin(
+            name: "GodotSwiftTreePlugin",
+            targets: ["GodotSwiftTreePlugin"]
+        ),
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "GodotSwiftTree"),
+        .plugin(
+            name: "GodotSwiftTreePlugin",
+            capability: .command(
+                intent: .custom(
+                    verb: "generate-code",
+                    description: "Generates statically typed node tree representation of Godot project"
+                ),
+                permissions: [
+                    .writeToPackageDirectory(
+                        reason: "Godot Swift Tree writes generated source code to make it accessible from the project"
+                    ),
+                ]
+            )
+        ),
         .testTarget(
             name: "GodotSwiftTreeTests",
-            dependencies: ["GodotSwiftTree"]),
+            dependencies: ["GodotSwiftTreePlugin"]
+        ),
     ]
 )
