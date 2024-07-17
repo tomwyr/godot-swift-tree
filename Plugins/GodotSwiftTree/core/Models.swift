@@ -52,9 +52,9 @@ protocol Node {
 class ParentNode: Node {
     let name: String
     let type: String
-    let children: [Node]
+    let children: [NodeType]
 
-    init(name: String, type: String, children: [Node]) {
+    init(name: String, type: String, children: [NodeType]) {
         self.name = name
         self.type = type
         self.children = children
