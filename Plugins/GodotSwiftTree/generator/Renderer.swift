@@ -30,49 +30,31 @@ class NodeTreeRenderer {
     private func renderScene(scene: Scene) -> String {
         let nodePath = #"\(path)/\#(scene.root.name)"#
 
-        let renderNodeHeader = { (type: String) in
-            "class \(scene.name)Scene : NodeKey<\(type)>"
-        }
-
-        switch scene.root {
+        return switch scene.root {
         case let .parentNode(root):
-            let header = renderNodeHeader(root.type)
-            let initSuper = #"super.init("\#(nodePath)", "\#(root.type)")"#
-
-            let children = root.children.map { node in renderNode(node: node, parentPath: nodePath) }
-            let fields = children.map(\.field).joinLines().indentLine()
-            let initializers = children.map(\.initializer).joinLines().indentLine()
-
-            return """
-            \(header) {
-                \(fields)
-
-                init() {
-                    \(initializers)
-                    \(initSuper)
-                }
-            }
-            """
+            renderParentNode(
+                node: root,
+                nodePath: nodePath,
+                className: "\(scene.name)Scene"
+            )
 
         case let .leafNode(root):
-            let header = renderNodeHeader(root.type)
-            
-            return """
-            \(header) {
-                init() {
+            """
+            class \(scene.name)Scene : NodeKey<\(root.type)> {
+                init(_ path: String) {
                     super.init("\(nodePath)", "\(root.type)")
                 }
             }
             """
 
         case let .nestedScene(root):
-            return """
+            """
             class \(scene.name)Scene : \(root.scene)Scene {}
             """
         }
     }
 
-    private func renderNode(node: NodeType, parentPath: String) -> (field: String, initializer: String) {
+    private func renderNode(node: NodeType, parentPath: String) -> RenderNodeResult {
         let nodePath = "\(parentPath)/\(node.name)"
         let symbolName = node.name
             .split(separator: #/\s+/#)
@@ -83,17 +65,62 @@ class NodeTreeRenderer {
 
         return switch node {
         case let .parentNode(node):
-            (field: "let \(symbolName): \(symbolName)Tree",
-             initializer: #"\#(symbolName) = \#(symbolName)Tree(path)"#)
+            (
+                field: "let \(symbolName): \(symbolName)Tree",
+                initializer: #"\#(symbolName) = \#(symbolName)Tree(path)"#,
+                nestedClass: renderParentNode(
+                    node: node,
+                    nodePath: parentPath,
+                    className: "\(symbolName)Tree"
+                )
+            )
 
         case let .leafNode(node):
-            (field: "let \(symbolName): NodeKey<\(node)>",
-             initializer: #"\#(symbolName) = NodeKey("\#(nodePath)", "\#(node.type)")"#)
+            (
+                field: "let \(symbolName): NodeKey<\(node)>",
+                initializer: #"\#(symbolName) = NodeKey("\#(nodePath)", "\#(node.type)")"#,
+                nestedClass: nil
+            )
 
         case let .nestedScene(node):
-            (field: "let \(symbolName): \(symbolName)Scene",
-             initializer: #"\#(symbolName) = \#(symbolName)Scene("\#(nodePath)")"#)
+            (
+                field: "let \(symbolName): \(symbolName)Scene",
+                initializer: #"\#(symbolName) = \#(symbolName)Scene("\#(nodePath)")"#,
+                nestedClass: nil
+            )
         }
+    }
+
+    private func renderParentNode(node: ParentNode, nodePath: String, className: String) -> String {
+        let header = "class \(className): NodeKey<\(node.type)>"
+        let initSuper = #"super.init("\#(nodePath)", "\#(node.type)")"#
+
+        let children = node.children.map { child in renderNode(node: child, parentPath: nodePath) }
+        let fields = children.map(\.field).joinLines().indentLine()
+        let initializers = children.map(\.initializer).joinLines().indentLine()
+        let nestedClasses = children.compactMap(\.nestedClass).joinLines(spacing: 2).indentLine()
+
+        var body = """
+            \(fields)
+
+            init(_ path: String) {
+                \(initializers)
+                \(initSuper)
+            }
+        """
+
+        if !nestedClasses.isEmpty {
+            body += """
+
+                \(nestedClasses)
+            """
+        }
+
+        return """
+        \(header) {
+        \(body)
+        }
+        """
     }
 
     private func renderTypes() -> String {
@@ -179,3 +206,5 @@ private extension String {
         return components(separatedBy: .newlines).joined(separator: "\n" + whiteSpace)
     }
 }
+
+private typealias RenderNodeResult = (field: String, initializer: String, nestedClass: String?)
