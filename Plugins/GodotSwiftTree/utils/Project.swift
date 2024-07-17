@@ -38,7 +38,7 @@ class GodotSwiftProject {
     }
 }
 
-extension String {
+extension URL {
     func walkTopDown() throws -> any Sequence<URL> {
         let fm = FileManager.default
 
@@ -55,16 +55,18 @@ extension String {
         var files = [URL]()
 
         while !directories.isEmpty {
-            let currentDirectory = directories.removeFirst()
+            let directory = directories.removeFirst()
 
-            try fm.contentsOfDirectory(atPath: currentDirectory).forEach { item in
-                let path = currentDirectory.appending(path: item)
-
-                switch isDirectory(path) {
-                case true:
+            try fm.contentsOfDirectory(atPath: directory.absoluteString).forEach { item in
+                let path = directory.appending(path: item)
+                
+                switch isDirectory(path.absoluteString) {
+                case .some(true):
                     directories.append(path)
-                case false:
+                case .some(false):
                     files.append(path)
+                case .none:
+                    break
                 }
             }
         }
