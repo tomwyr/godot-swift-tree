@@ -12,7 +12,7 @@ class NodeTreeGenerator {
 
     func generate(project: GodotSwiftProject) throws -> NodeTreeInfo {
         Log.readingScenes()
-        let scenesData = project.readScenes()
+        let scenesData = try project.readScenes()
         Log.scenesFound(scenes: scenesData)
 
         let scenes = try scenesData.map { data in
@@ -25,7 +25,7 @@ class NodeTreeGenerator {
         let content = renderer.render(scenes: scenes)
 
         Log.savingResult()
-        project.writeNodeTree(content: content)
+        try project.writeNodeTree(content: content)
         Log.resultSaved()
 
         return NodeTreeInfo(scenes: scenes)

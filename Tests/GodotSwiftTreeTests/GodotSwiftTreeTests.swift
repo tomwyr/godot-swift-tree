@@ -1,5 +1,5 @@
-import XCTest
 @testable import GodotSwiftTree
+import XCTest
 
 final class GodotSwiftTreeTests: XCTestCase {
     func testExample() throws {
