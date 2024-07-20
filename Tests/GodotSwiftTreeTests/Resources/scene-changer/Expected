@@ -1,0 +1,96 @@
+import SwiftGodot
+
+class GDTree {
+    private init() {}
+
+    let SceneA = SceneAScene("/root")
+    let SceneB = SceneBScene("/root")
+}
+
+class SceneAScene: NodeRef<Panel> {
+    let Label: NodeRef<Label>
+    let GoToScene: NodeRef<Button>
+
+    init(_: String) {
+        Label = NodeRef<Label>("\(path)/SceneA/Label", "Label")
+        GoToScene = NodeRef<Button>("\(path)/SceneA/GoToScene", "Button")
+        super.init("\(path)/SceneA", "Panel")
+    }
+}
+
+class SceneBScene: NodeRef<Panel> {
+    let Label: NodeRef<Label>
+    let GoToScene: NodeRef<Button>
+
+    init(_: String) {
+        Label = NodeRef<Label>("\(path)/SceneB/Label", "Label")
+        GoToScene = NodeRef<Button>("\(path)/SceneB/GoToScene", "Button")
+        super.init("\(path)/SceneB", "Panel")
+    }
+}
+
+class NodeKey<T: Node> {
+    private let path: String
+    private let type: String
+
+    init(_ path: String, _ type: String) {
+        self.path = path
+        self.type = type
+    }
+
+    func getValue(thisRef: Node) throws -> T {
+        guard let node = thisRef.getNode(path: NodePath(from: path)) else {
+            throw NodeTreeError.nodeNotFound(expectedPath: path)
+        }
+        guard let node = node as? T else {
+            throw NodeTreeError.nodeInvalidType(expectedType: type)
+        }
+        return node
+    }
+}
+
+@propertyWrapper class NodeRef<T: Node> {
+    let nodeRef: NodeKey<T>
+
+    init(_ nodeRef: NodeKey<T>) {
+        self.nodeRef = nodeRef
+    }
+
+    static subscript<E: Node>(
+        _enclosingInstance instance: E,
+        wrapped _: ReferenceWritableKeyPath<E, T>,
+        storage storageKeyPath: ReferenceWritableKeyPath<E, NodeRef<T>>
+    ) -> T {
+        return instance[keyPath: storageKeyPath].wrappedValue(node: instance)
+    }
+
+    func wrappedValue(node: Node) -> T {
+        do {
+            return try nodeRef.getValue(thisRef: node)
+        } catch let error as NodeTreeError {
+            fatalError(error.message)
+        } catch {
+            fatalError("Unexpected error: \(error)")
+        }
+    }
+
+    @available(*, unavailable, message: "NodeRef's value cannot be accessed without a reference to another node object. Use wrappedValue(:node), or declare the referenced node with @NodeRef property wrapper instead.")
+    var wrappedValue: T {
+        get { fatalError() }
+        set { fatalError() }
+    }
+}
+
+enum NodeTreeError: Error {
+    case nodeNotFound(expectedPath: String)
+    case nodeInvalidType(expectedType: String?)
+
+    var message: String {
+        return switch self {
+        case let .nodeNotFound(expectedPath):
+            "Node not found under given path \(expectedPath)"
+        case let .nodeInvalidType(expectedType):
+            "Node is not an instance of \(expectedType)"
+        }
+    }
+}

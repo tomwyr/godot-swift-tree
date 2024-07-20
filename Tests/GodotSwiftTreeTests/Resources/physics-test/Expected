@@ -1,0 +1,136 @@
+import SwiftGodot
+
+class GDTree {
+    private init() {}
+
+    static let Main = MainScene("/root")
+}
+
+class MainScene: NodeKey<Control> {
+    let TestsMenu: NodeRef<MenuButton>
+    let LabelControls: NodeRef<Label>
+    let LabelFPS: NodeRef<Label>
+    let LabelEngine: NodeRef<Label>
+    let LabelVersion: NodeRef<Label>
+    let LabelTest: NodeRef<Label>
+    let LabelPause: NodeRef<Label>
+    let PanelLog: PanelLogTree
+
+    init(_ path: String) {
+        TestsMenu = NodeKey("\(path)/Main/TestsMenu", "MenuButton")
+        LabelControls = NodeKey("\(path)/Main/LabelControls", "Label")
+        LabelFPS = NodeKey("\(path)/Main/LabelFPS", "Label")
+        LabelEngine = NodeKey("\(path)/Main/LabelEngine", "Label")
+        LabelVersion = NodeKey("\(path)/Main/LabelVersion", "Label")
+        LabelTest = NodeKey("\(path)/Main/LabelTest", "Label")
+        LabelPause = NodeKey("\(path)/Main/LabelPause", "Label")
+        PanelLog = PanelLogTree(path)
+        super.init("\(path)/Main", "Control")
+    }
+
+    class MobPathTree: NodeKey<Path2D> {
+        let MobSpawnLocation: NodeKey<PathFollow2D>
+
+        init(_ path: String) {
+            MobSpawnLocation = NodeKey("\(path)/Main/MobPath/MobSpawnLocation", "PathFollow2D")
+            super.init("\(path)/Main/MobPath", "Path2D")
+        }
+    }
+
+    class PanelLogTree: NodeRef<Panel> {
+        let ButtonClear: NodeRef<Button>
+        let CheckBoxScroll: NodeRef<CheckButton>
+        let ScrollLog: ScrollLogTree
+
+        init(_ path: String) {
+            ButtonClear = ("\(path)/Main/PanelLog/ButtonClear", "Button")
+            CheckBoxScroll = ("\(path)/Main/PanelLog/CheckBoxScroll", "CheckButton")
+            ScrollLog = ScrollLogTree(path)
+            super.init("\(path)/Main/PanelLog", "Panel")
+        }
+
+        class ScrollLogTree: NodeRef<ScrollContainer> {
+            let VBoxLog: VBoxLogTree
+
+            init(_ path: String) {
+                VBoxLog = VBoxLogTree(path)
+                super.init("\(path)/Main/PanelLog/ScrollLog", "ScrollContainer")
+            }
+
+            class VBoxLogTree: NodeRef<VBoxContainer> {
+                let LabelLog: NodeRef<Label>
+
+                init(_ path: String) {
+                    LabelLog = NodeRef<Label>("\(path)/Main/PanelLog/ScrollLog/VBoxLog/LabelLog", "Label")
+                    super.init("\(path)/Main/PanelLog/ScrollLog/VBoxLog", "VBoxContainer")
+                }
+            }
+        }
+    }
+}
+
+class NodeKey<T: Node> {
+    private let path: String
+    private let type: String
+
+    init(_ path: String, _ type: String) {
+        self.path = path
+        self.type = type
+    }
+
+    func getValue(thisRef: Node) throws -> T {
+        guard let node = thisRef.getNode(path: NodePath(from: path)) else {
+            throw NodeTreeError.nodeNotFound(expectedPath: path)
+        }
+        guard let node = node as? T else {
+            throw NodeTreeError.nodeInvalidType(expectedType: type)
+        }
+        return node
+    }
+}
+
+@propertyWrapper class NodeRef<T: Node> {
+    let nodeRef: NodeKey<T>
+
+    init(_ nodeRef: NodeKey<T>) {
+        self.nodeRef = nodeRef
+    }
+
+    static subscript<E: Node>(
+        _enclosingInstance instance: E,
+        wrapped _: ReferenceWritableKeyPath<E, T>,
+        storage storageKeyPath: ReferenceWritableKeyPath<E, NodeRef<T>>
+    ) -> T {
+        return instance[keyPath: storageKeyPath].wrappedValue(node: instance)
+    }
+
+    func wrappedValue(node: Node) -> T {
+        do {
+            return try nodeRef.getValue(thisRef: node)
+        } catch let error as NodeTreeError {
+            fatalError(error.message)
+        } catch {
+            fatalError("Unexpected error: \(error)")
+        }
+    }
+
+    @available(*, unavailable, message: "NodeRef's value cannot be accessed without a reference to another node object. Use wrappedValue(:node), or declare the referenced node with @NodeRef property wrapper instead.")
+    var wrappedValue: T {
+        get { fatalError() }
+        set { fatalError() }
+    }
+}
+
+enum NodeTreeError: Error {
+    case nodeNotFound(expectedPath: String)
+    case nodeInvalidType(expectedType: String?)
+
+    var message: String {
+        return switch self {
+        case let .nodeNotFound(expectedPath):
+            "Node not found under given path \(expectedPath)"
+        case let .nodeInvalidType(expectedType):
+            "Node is not an instance of \(expectedType)"
+        }
+    }
+}

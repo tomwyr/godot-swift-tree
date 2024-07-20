@@ -1,0 +1,191 @@
+import SwiftGodot
+
+class GDTree {
+    private init() {}
+
+    let Main = MainScene("/root")
+    let Waypoint = WaypointScene("/root")
+}
+
+class MainScene: NodeRef<Node3D> {
+    let BlueCube: BlueCubeTree
+    let GreenCube: GreenCubeTree
+    let YellowCube: YellowCubeTree
+    let RedCube: RedCubeTree
+    let Camera3D: NodeRef<Camera3D>
+    let Label: NodeRef<Label>
+    let Ground: NodeRef<MeshInstance3D>
+    let WhiteCube: NodeRef<MeshInstance3D>
+    let Environment: EnvironmentTree
+
+    init(_ path: String) {
+        BlueCube = BlueCubeTree(path)
+        GreenCube = GreenCubeTree(path)
+        YellowCube = YellowCubeTree(path)
+        RedCube = RedCubeTree(path)
+        Camera3D = ("\(path)/Main/Camera3D", "Camera3D")
+        Label = ("\(path)/Main/Label", "Label")
+        Ground = ("\(path)/Main/Ground", "MeshInstance3D")
+        WhiteCube = ("\(path)/Main/WhiteCube", "MeshInstance3D")
+        Environment = EnvironmentTree(path)
+        super.init("\(path)/Main", "Node3D")
+    }
+
+    class BlueCubeTree: NodeRef<MeshInstance3D> {
+        let WaypointAnchor: WaypointAnchorTree
+
+        init(_ path: String) {
+            WaypointAnchor = WaypointAnchorTree(path)
+            super.init("\(path)/Main/BlueCube", "MeshInstance3D")
+        }
+
+        class WaypointAnchorTree: NodeRef<Marker3D> {
+            let Waypoint: WaypointScene
+
+            init(_ path: String) {
+                Waypoint = WaypointScene("\(path)/Main/BlueCube/WaypointAnchor/Waypoint")
+                super.init("\(path)/Main/BlueCube/WaypointAnchor", "Marker3D")
+            }
+        }
+    }
+
+    class GreenCubeTree: NodeRef<MeshInstance3D> {
+        let WaypointAnchor: WaypointAnchorTree
+
+        init(_ path: String) {
+            WaypointAnchor = WaypointAnchorTree(path)
+            super.init("\(path)/Main/GreenCube", "MeshInstance3D")
+        }
+
+        class WaypointAnchorTree: NodeRef<Marker3D> {
+            let Waypoint: WaypointScene
+
+            init(_ path: String) {
+                Waypoint = WaypointScene("\(path)/Main/GreenCube/WaypointAnchor/Waypoint")
+                super.init("\(path)/Main/GreenCube/WaypointAnchor", "Marker3D")
+            }
+        }
+    }
+
+    class YellowCubeTree: NodeRef<MeshInstance3D> {
+        let WaypointAnchor: WaypointAnchorTree
+
+        init(_ path: String) {
+            WaypointAnchor = WaypointAnchorTree(path)
+            super.init("\(path)/Main/YellowCube", "MeshInstance3D")
+        }
+
+        class WaypointAnchorTree: NodeRef<Marker3D> {
+            let Waypoint: WaypointScene
+
+            init(_ path: String) {
+                Waypoint = WaypointScene("\(path)/Main/YellowCube/WaypointAnchor/Waypoint")
+                super.init("\(path)/Main/YellowCube/WaypointAnchor", "Marker3D")
+            }
+        }
+    }
+
+    class RedCubeTree: NodeRef<MeshInstance3D> {
+        let WaypointAnchor: WaypointAnchorTree
+
+        init(_ path: String) {
+            WaypointAnchor = WaypointAnchorTree(path)
+            super.init("\(path)/Main/RedCube", "MeshInstance3D")
+        }
+
+        class WaypointAnchorTree: NodeRef<Marker3D> {
+            let Waypoint: WaypointScene
+
+            init(_ path: String) {
+                Waypoint = WaypointScene("\(path)/Main/RedCube/WaypointAnchor/Waypoint")
+                super.init("\(path)/Main/RedCube/WaypointAnchor", "Marker3D")
+            }
+        }
+    }
+
+    class EnvironmentTree: NodeRef<WorldEnvironment> {
+        let Sun: NodeRef<DirectionalLight3D>
+
+        init(_ path: String) {
+            Sun = NodeRef<DirectionalLight3D>("\(path)/Main/Environment/Sun", "DirectionalLight3D")
+            super.init("\(path)/Main/Environment", "WorldEnvironment")
+        }
+    }
+}
+
+class WaypointScene: NodeRef<Control> {
+    let Label: NodeRef<Label>
+    let Marker: NodeRef<TextureRect>
+
+    init(_ path: String) {
+        Label = NodeRef<Label>("\(path)/Waypoint/Label", "Label")
+        Marker = NodeRef<TextureRect>("\(path)/Waypoint/Marker", "TextureRect")
+        super.init("\(path)/Waypoint", "Control")
+    }
+}
+
+class NodeKey<T: Node> {
+    private let path: String
+    private let type: String
+
+    init(_ path: String, _ type: String) {
+        self.path = path
+        self.type = type
+    }
+
+    func getValue(thisRef: Node) throws -> T {
+        guard let node = thisRef.getNode(path: NodePath(from: path)) else {
+            throw NodeTreeError.nodeNotFound(expectedPath: path)
+        }
+        guard let node = node as? T else {
+            throw NodeTreeError.nodeInvalidType(expectedType: type)
+        }
+        return node
+    }
+}
+
+@propertyWrapper class NodeRef<T: Node> {
+    let nodeRef: NodeKey<T>
+
+    init(_ nodeRef: NodeKey<T>) {
+        self.nodeRef = nodeRef
+    }
+
+    static subscript<E: Node>(
+        _enclosingInstance instance: E,
+        wrapped _: ReferenceWritableKeyPath<E, T>,
+        storage storageKeyPath: ReferenceWritableKeyPath<E, NodeRef<T>>
+    ) -> T {
+        return instance[keyPath: storageKeyPath].wrappedValue(node: instance)
+    }
+
+    func wrappedValue(node: Node) -> T {
+        do {
+            return try nodeRef.getValue(thisRef: node)
+        } catch let error as NodeTreeError {
+            fatalError(error.message)
+        } catch {
+            fatalError("Unexpected error: \(error)")
+        }
+    }
+
+    @available(*, unavailable, message: "NodeRef's value cannot be accessed without a reference to another node object. Use wrappedValue(:node), or declare the referenced node with @NodeRef property wrapper instead.")
+    var wrappedValue: T {
+        get { fatalError() }
+        set { fatalError() }
+    }
+}
+
+enum NodeTreeError: Error {
+    case nodeNotFound(expectedPath: String)
+    case nodeInvalidType(expectedType: String?)
+
+    var message: String {
+        return switch self {
+        case let .nodeNotFound(expectedPath):
+            "Node not found under given path \(expectedPath)"
+        case let .nodeInvalidType(expectedType):
+            "Node is not an instance of \(expectedType)"
+        }
+    }
+}
