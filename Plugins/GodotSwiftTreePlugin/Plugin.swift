@@ -19,19 +19,17 @@ struct GodotSwiftTreePlugin: CommandPlugin {
     }
 }
 
-struct GodotNodeTreeConfig {
-    let projectPath: String?
-    
-    init(arguments: [String]) {
-        self.projectPath = arguments.findArg(named: "project-path")
-    }
-}
-
 private extension [String] {
     func findArg(named arg: String) -> String? {
         if let index = firstIndex(of: arg), index < count - 1 {
             return self[index]
         }
         return nil
+    }
+}
+
+extension GodotNodeTreeConfig {
+    init(arguments: [String]) {
+        self.projectPath = arguments.findArg(named: "project-path")
     }
 }

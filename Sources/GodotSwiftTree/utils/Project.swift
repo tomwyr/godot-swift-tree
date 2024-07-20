@@ -1,6 +1,10 @@
 import Foundation
 
-class GodotSwiftProject {
+public struct GodotNodeTreeConfig {
+    let projectPath: String?
+}
+
+public class GodotSwiftProject {
     private let projectPath: String
     private let outputPath: String
 
@@ -11,9 +15,9 @@ class GodotSwiftProject {
 
     func readScenes() throws -> [SceneData] {
         let directory = URL(fileURLWithPath: projectPath, isDirectory: true)
-
+        
         return try directory.walkTopDown()
-            .filter { $0.pathExtension == ".tscn" }
+            .filter { $0.pathExtension == "tscn" }
             .map { file in
                 let fileName = file.deletingPathExtension().lastPathComponent
                 let name = fileName.split(whereSeparator: ["_", "-"].contains).map(\.capitalized).joined()

@@ -1,4 +1,4 @@
-class NodeTreeGenerator {
+public class NodeTreeGenerator {
     private let parser: SceneNodesParser
     private let renderer: NodeTreeRenderer
 
