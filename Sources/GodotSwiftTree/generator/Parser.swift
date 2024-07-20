@@ -13,7 +13,7 @@ private class ScenesParser {
         let sceneIdsToPaths = splitToEntries(data: sceneData.content, entryType: "ext_resource")
             .map(parseEntryParams)
             .compactMap(extractSceneIdToPath)
-        return getScenePathsById(sceneIdsToPaths: sceneIdsToPaths)
+        return Dictionary(uniqueKeysWithValues: sceneIdsToPaths)
     }
 
     private func extractSceneIdToPath(params: [String: String]) -> (String, String)? {
@@ -25,14 +25,6 @@ private class ScenesParser {
         }
 
         return (id, path)
-    }
-
-    private func getScenePathsById(sceneIdsToPaths: [(String, String)]) -> [String: String] {
-        let duplicates = Dictionary(grouping: sceneIdsToPaths, by: { id, _ in id })
-            .mapValues { paths in paths.map { _, path in path } }
-            .filter { _, paths in paths.count > 1 }
-
-        return Dictionary(uniqueKeysWithValues: sceneIdsToPaths)
     }
 }
 
