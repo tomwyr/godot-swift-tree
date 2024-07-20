@@ -10,7 +10,6 @@ class SceneNodesParser {
 
 private class ScenesParser {
     func parse(sceneData: SceneData) -> [String: String] {
-        Log.parsingScenePaths()
         let sceneIdsToPaths = splitToEntries(data: sceneData.content, entryType: "ext_resource")
             .map(parseEntryParams)
             .compactMap(extractSceneIdToPath)
@@ -22,7 +21,6 @@ private class ScenesParser {
         let path = params["path"]
 
         guard let id, let path else {
-            Log.skippingSceneResource(params: params)
             return nil
         }
 
@@ -33,10 +31,6 @@ private class ScenesParser {
         let duplicates = Dictionary(grouping: sceneIdsToPaths, by: { id, _ in id })
             .mapValues { paths in paths.map { _, path in path } }
             .filter { _, paths in paths.count > 1 }
-
-        if !duplicates.isEmpty {
-            Log.duplicatedSceneResources(duplicates: duplicates)
-        }
 
         return Dictionary(uniqueKeysWithValues: sceneIdsToPaths)
     }
@@ -50,7 +44,6 @@ private class NodesParser {
     }
 
     func parse(sceneData: SceneData) throws -> NodeType {
-        Log.parsingSceneNodes()
         let nodeParams = splitToEntries(data: sceneData.content, entryType: "node")
             .map(parseEntryParams)
             .compactMap(extractNodeParams)
@@ -64,7 +57,6 @@ private class NodesParser {
         let parent = params["parent"]
 
         guard let name, type != nil || instance != nil, type == nil || instance == nil else {
-            Log.skippingNode(params: params)
             return nil
         }
 
@@ -72,7 +64,6 @@ private class NodesParser {
     }
 
     private func createRootNode(sceneName: String, params: [NodeParams]) throws -> NodeType {
-        Log.creatingRootNode()
         let childrenByParent = Dictionary(grouping: params, by: { $0.parent })
         let rootParams = params.first { $0.parent == nil }
 
@@ -129,14 +120,12 @@ class NodeParams {
 }
 
 private func splitToEntries(data: String, entryType: String) -> [String] {
-    Log.splittingEntries(entryType: entryType)
     let pattern = Regex { "\\[\(entryType) .*]" }
     let matches = data.matches(of: pattern)
     return matches.compactMap { String($0.output) }
 }
 
 private func parseEntryParams(entry: String) -> [String: String] {
-    Log.parsingEntryParams(entry: entry)
     let pattern = #/(?:(\w+)=(?:\w+\("(.+)"\)|"(.+?)"))+/#
     let matches = entry.matches(of: pattern)
     return matches.reduce(into: [String: String]()) { params, match in
@@ -147,7 +136,6 @@ private func parseEntryParams(entry: String) -> [String: String] {
 }
 
 private func parseSceneName(scenePath: String) -> String? {
-    Log.parsingEntryParams(entry: scenePath)
     let pattern = #/^res://(.*).tscn$/#
     let matches = scenePath.matches(of: pattern)
     let groups = matches.first?.output

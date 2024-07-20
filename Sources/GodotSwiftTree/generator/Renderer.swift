@@ -61,8 +61,6 @@ class NodeTreeRenderer {
             .enumerated().map { index, s in index == 0 ? String(s) : s.capitalized }
             .joined()
 
-        Log.renderingNode(node: node, nodePath: nodePath)
-
         return switch node {
         case let .parentNode(node):
             (
@@ -82,7 +80,7 @@ class NodeTreeRenderer {
                 nestedClass: nil
             )
 
-        case let .nestedScene(node):
+        case let .nestedScene(_):
             (
                 field: "let \(symbolName): \(symbolName)Scene",
                 initializer: #"\#(symbolName) = \#(symbolName)Scene("\#(nodePath)")"#,

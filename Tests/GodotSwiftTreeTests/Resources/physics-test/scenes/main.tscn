@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://tests_menu.gd" id="4"]
 [ext_resource type="Script" path="res://utils/label_test.gd" id="5"]
 [ext_resource type="Script" path="res://utils/label_pause.gd" id="6"]
-[ext_resource type="Script" path="res://utils/container_log.gd" id="10"]
 [ext_resource type="Script" path="res://utils/scroll_log.gd" id="11"]
 [ext_resource type="Script" path="res://tests.gd" id="12"]
 

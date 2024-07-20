@@ -21,11 +21,10 @@ final class GodotSwiftTreeTests: XCTestCase {
     func testMultipleScenes() throws {
         try test(testCase: "dodge-the-creeps")
     }
-    
+
     private func test(testCase: String) throws {
-            Log.logger = Logger.stdOut()
-            let project = setUpTestProject(testCase: "simple")
-            _ = try NodeTreeGenerator().generate(project: project)
+        let project = setUpTestProject(testCase: "simple")
+        _ = try NodeTreeGenerator().generate(project: project)
     }
 
     private func setUpTestProject(testCase: String) -> GodotSwiftProject {

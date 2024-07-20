@@ -15,7 +15,7 @@ public class GodotSwiftProject {
 
     func readScenes() throws -> [SceneData] {
         let directory = URL(fileURLWithPath: projectPath, isDirectory: true)
-        
+
         return try directory.walkTopDown()
             .filter { $0.pathExtension == "tscn" }
             .map { file in
@@ -34,43 +34,32 @@ public class GodotSwiftProject {
 
 extension GodotSwiftProject {
     static func create(rootPath: String, config: GodotNodeTreeConfig) throws -> GodotSwiftProject {
-        Log.swiftProjectPath(rootPath: rootPath)
-
         let projectRelativePath = config.projectPath
-        if let projectRelativePath {
-            Log.godotCustomProjectPath(projectRelativePath: projectRelativePath)
-        }
-
         let projectPath = try getProjectPath(rootPath: rootPath, relativePath: projectRelativePath)
-        Log.godotProjectPath(projectPath: projectPath)
-
         let outputPath = getOutputPath(rootPath: rootPath)
-        Log.swiftOutputPath(filePath: outputPath)
 
         return GodotSwiftProject(projectPath: projectPath, outputPath: outputPath)
     }
 
-
-    static private func getProjectPath(rootPath: String, relativePath: String?) throws -> String {
+    private static func getProjectPath(rootPath: String, relativePath: String?) throws -> String {
         var url = URL(filePath: rootPath)
         if let relativePath {
             url = url.appending(path: relativePath)
         }
         url = url.appending(path: "project.godot")
-        
+
         let path = url.absoluteString
 
         let fm = FileManager.default
         guard fm.fileExists(atPath: path) else {
             throw GeneratorError.invalidGodotProject
         }
-        
+
         return path
     }
 
-    static private func getOutputPath(rootPath: String) -> String {
+    private static func getOutputPath(rootPath: String) -> String {
         let fileName = "GodotNodeTree.swift"
         return URL(filePath: rootPath).appending(path: fileName).absoluteString
     }
-
 }
