@@ -1,12 +1,12 @@
 enum GeneratorError: Error {
-    case invalidGodotProjectException
+    case invalidGodotProject
     case unexpectedNodeParameters(nodeParams: NodeParams)
     case unexpectedSceneResource(instance: String)
     case parentNodeNotFound(sceneName: String)
 
     var message: String {
         switch self {
-        case .invalidGodotProjectException:
+        case .invalidGodotProject:
             "The project in which GodotNodeTree annotation was used isn't a valid Godot project directory"
         case let .unexpectedNodeParameters(nodeParams):
             "A node with unexpected set of parameters encountered: \(nodeParams)"

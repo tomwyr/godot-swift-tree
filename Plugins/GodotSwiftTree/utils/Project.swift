@@ -1,15 +1,5 @@
 import Foundation
 
-class SceneData {
-    let name: String
-    let content: String
-
-    init(name: String, content: String) {
-        self.name = name
-        self.content = content
-    }
-}
-
 class GodotSwiftProject {
     private let projectPath: String
     private let outputPath: String
@@ -38,39 +28,45 @@ class GodotSwiftProject {
     }
 }
 
-extension URL {
-    func walkTopDown() throws -> any Sequence<URL> {
-        let fm = FileManager.default
+extension GodotSwiftProject {
+    static func create(rootPath: String, config: GodotNodeTreeConfig) throws -> GodotSwiftProject {
+        Log.swiftProjectPath(rootPath: rootPath)
 
-        func isDirectory(_ path: String) -> Bool? {
-            var isDirectory: ObjCBool = false
-            if fm.fileExists(atPath: path, isDirectory: &isDirectory) {
-                return isDirectory.boolValue
-            } else {
-                return nil
-            }
+        let projectRelativePath = config.projectPath
+        if let projectRelativePath {
+            Log.godotCustomProjectPath(projectRelativePath: projectRelativePath)
         }
 
-        var directories = [self]
-        var files = [URL]()
+        let projectPath = try getProjectPath(rootPath: rootPath, relativePath: projectRelativePath)
+        Log.godotProjectPath(projectPath: projectPath)
 
-        while !directories.isEmpty {
-            let directory = directories.removeFirst()
+        let outputPath = getOutputPath(rootPath: rootPath)
+        Log.swiftOutputPath(filePath: outputPath)
 
-            try fm.contentsOfDirectory(atPath: directory.absoluteString).forEach { item in
-                let path = directory.appending(path: item)
-                
-                switch isDirectory(path.absoluteString) {
-                case .some(true):
-                    directories.append(path)
-                case .some(false):
-                    files.append(path)
-                case .none:
-                    break
-                }
-            }
-        }
-
-        return files
+        return GodotSwiftProject(projectPath: projectPath, outputPath: outputPath)
     }
+
+
+    static private func getProjectPath(rootPath: String, relativePath: String?) throws -> String {
+        var url = URL(filePath: rootPath)
+        if let relativePath {
+            url = url.appending(path: relativePath)
+        }
+        url = url.appending(path: "project.godot")
+        
+        let path = url.absoluteString
+
+        let fm = FileManager.default
+        guard fm.fileExists(atPath: path) else {
+            throw GeneratorError.invalidGodotProject
+        }
+        
+        return path
+    }
+
+    static private func getOutputPath(rootPath: String) -> String {
+        let fileName = "GodotNodeTree.swift"
+        return URL(filePath: rootPath).appending(path: fileName).absoluteString
+    }
+
 }

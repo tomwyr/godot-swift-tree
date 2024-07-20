@@ -1,3 +1,13 @@
+class SceneData {
+    let name: String
+    let content: String
+
+    init(name: String, content: String) {
+        self.name = name
+        self.content = content
+    }
+}
+
 class Scene {
     let name: String
     let root: NodeType

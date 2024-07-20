@@ -1,11 +1,7 @@
-protocol Logger {
-    func debug(_ message: String)
-    func info(_ message: String)
-    func warn(_ message: String)
-}
+import Foundation
 
 class Log {
-    static var logger: any Logger = NoopLogger()
+    static var logger: Logger = Logger.noop()
 
     private init() {}
 
@@ -24,11 +20,11 @@ class Log {
 
 // ProcessorLog
 extension Log {
-    static func kotlinProjectPath(rootPath: String) {
-        info("Kotlin project found under \(rootPath)")
+    static func swiftProjectPath(rootPath: String) {
+        info("Swift project found under \(rootPath)")
     }
 
-    static func kotlinOutputPath(filePath: String) {
+    static func swiftOutputPath(filePath: String) {
         info("Generated code will be saved at \(filePath)")
     }
 
@@ -38,10 +34,6 @@ extension Log {
 
     static func godotProjectPath(projectPath: String) {
         info("Godot project found under \(projectPath)")
-    }
-
-    static func targetPackage(targetPackage: String) {
-        info("Package for which code will be generated identified as \(targetPackage)")
     }
 
     static func nodeTreeGenerated(treeInfo: NodeTreeInfo) {
@@ -138,8 +130,31 @@ extension Log {
     }
 }
 
-private class NoopLogger: Logger {
-    func debug(_: String) {}
-    func info(_: String) {}
-    func warn(_: String) {}
+class Logger {
+    let debug: (_ message: String) -> Void
+    let info: (_ message: String) -> Void
+    let warn: (_ message: String) -> Void
+    
+    init(debug: @escaping (_: String) -> Void, info: @escaping (_: String) -> Void, warn: @escaping (_: String) -> Void) {
+        self.debug = debug
+        self.info = info
+        self.warn = warn
+    }
+    
+    static func noop() -> Logger {
+        Logger(debug: { _ in }, info: { _ in }, warn: { _ in })
+    }
+    
+    static func stdOut() -> Logger {
+        func log(message: String, level: String) {
+            let time = Date.now.formatted(date: .complete, time: .standard)
+            print("\(time) \(level) \(message)")
+        }
+        
+        return Logger(
+            debug: { log(message: $0, level: "DEBUG") },
+            info: { log(message: $0, level: "INFO") },
+            warn: { log(message: $0, level: "WARN") }
+        )
+    }
 }
