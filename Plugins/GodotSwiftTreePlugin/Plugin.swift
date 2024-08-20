@@ -2,23 +2,23 @@ import PackagePlugin
 
 @main
 struct GodotSwiftTreePlugin: CommandPlugin {
-    func performCommand(context: PluginContext, arguments: [String]) throws {
-        let config = GodotNodeTreeConfig(arguments: arguments)
-        try GenerateTreeCommand().run(context: context, config: config)
-    }
+  func performCommand(context: PluginContext, arguments: [String]) throws {
+    let config = GodotNodeTreeConfig(arguments: arguments)
+    try GenerateTreeCommand().run(context: context, config: config)
+  }
 }
 
-private extension [String] {
-    func findArg(named arg: String) -> String? {
-        if let index = firstIndex(of: arg), index < count - 1 {
-            return self[index]
-        }
-        return nil
+extension [String] {
+  fileprivate func findArg(named arg: String) -> String? {
+    if let index = firstIndex(of: arg), index < count - 1 {
+      return self[index]
     }
+    return nil
+  }
 }
 
 extension GodotNodeTreeConfig {
-    init(arguments: [String]) {
-        projectPath = arguments.findArg(named: "project-path")
-    }
+  init(arguments: [String]) {
+    projectPath = arguments.findArg(named: "project-path")
+  }
 }

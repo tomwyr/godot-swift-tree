@@ -4,33 +4,34 @@
 import PackageDescription
 
 let package = Package(
-    name: "GodotSwiftTree",
-    platforms: [
-        .macOS(.v13),
-    ],
-    products: [
-        .plugin(
-            name: "GodotSwiftTreePlugin",
-            targets: ["GodotSwiftTreePlugin"]
-        )
-    ],
-    targets: [
-        .plugin(
-            name: "GodotSwiftTreePlugin",
-            capability: .command(
-                intent: .custom(
-                    verb: "generate",
-                    description: "Generates statically typed node tree representation of Godot project"
-                ),
-                permissions: [
-                    .writeToPackageDirectory(
-                        reason: "Godot Swift Tree writes generated source code to make it accessible from the project"
-                    ),
-                ]
-            )
+  name: "GodotSwiftTree",
+  platforms: [
+    .macOS(.v13)
+  ],
+  products: [
+    .plugin(
+      name: "GodotSwiftTreePlugin",
+      targets: ["GodotSwiftTreePlugin"]
+    )
+  ],
+  targets: [
+    .plugin(
+      name: "GodotSwiftTreePlugin",
+      capability: .command(
+        intent: .custom(
+          verb: "generate",
+          description: "Generates statically typed node tree representation of Godot project"
         ),
-        .testTarget(
-            name: "GodotSwiftTreeTests"
-        ),
-    ]
+        permissions: [
+          .writeToPackageDirectory(
+            reason:
+              "Godot Swift Tree writes generated source code to make it accessible from the project"
+          )
+        ]
+      )
+    ),
+    .testTarget(
+      name: "GodotSwiftTreeTests"
+    ),
+  ]
 )
