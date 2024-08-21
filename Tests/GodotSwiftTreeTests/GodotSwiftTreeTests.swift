@@ -23,8 +23,10 @@ final class GodotSwiftTreeTests: XCTestCase {
   }
 
   private func test(testCase: String) throws {
-    let project = setUpTestProject(testCase: "simple")
+    let project = setUpTestProject(testCase: testCase)
+    defer { try? cleanUpTestProject(project: project) }
     _ = try NodeTreeGenerator().generate(project: project)
+    try assertGeneratorOutput(project: project)
   }
 
   private func setUpTestProject(testCase: String) -> GodotSwiftProject {
@@ -35,5 +37,21 @@ final class GodotSwiftTreeTests: XCTestCase {
       projectPath: "\(basePath)/\(testCase)/scenes",
       outputPath: "\(basePath)/\(testCase)/Actual"
     )
+  }
+
+  private func cleanUpTestProject(project: GodotSwiftProject) throws {
+    let outputFilePath = URL(filePath: project.outputPath)
+    try FileManager.default.removeItem(at: outputFilePath)
+  }
+
+  private func assertGeneratorOutput(project: GodotSwiftProject) throws {
+    let expectedPath = URL(filePath: project.outputPath)
+      .deletingLastPathComponent().appending(path: "Expected").path()
+    let actualPath = project.outputPath
+
+    let expected = try String(contentsOfFile: expectedPath, encoding: .utf8)
+    let actual = try String(contentsOfFile: actualPath, encoding: .utf8)
+
+    XCTAssertEqual(expected, actual)
   }
 }
