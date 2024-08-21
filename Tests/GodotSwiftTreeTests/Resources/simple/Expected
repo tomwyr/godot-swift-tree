@@ -6,17 +6,17 @@ class GDTree {
     static let Main = MainScene("/root")
 }
 
-class MainScene: NodeRef<GridContainer> {
-    let KotlinGDJ: NodeRef<Label>
-    let JavaGDJ: NodeRef<Label>
-    let KotlinSource: NodeRef<Label>
-    let JavaSource: NodeRef<Label>
+class MainScene: NodeKey<GridContainer> {
+    let KotlinGDJ: NodeKey<Label>
+    let JavaGDJ: NodeKey<Label>
+    let KotlinSource: NodeKey<Label>
+    let JavaSource: NodeKey<Label>
 
     init(_ path: String) {
-        KotlinGDJ = NodeRef<Label>("\(path)/Root/Kotlin GDJ", "Label")
-        JavaGDJ = NodeRef<Label>("\(path)/Root/Java GDJ", "Label")
-        KotlinSource = NodeRef<Label>("\(path)/Root/Kotlin source", "Label")
-        JavaSource = NodeRef<Label>("\(path)/Root/Java source", "Label")
+        KotlinGDJ = NodeKey("\(path)/Root/Kotlin GDJ", "Label")
+        JavaGDJ = NodeKey("\(path)/Root/Java GDJ", "Label")
+        KotlinSource = NodeKey("\(path)/Root/Kotlin source", "Label")
+        JavaSource = NodeKey("\(path)/Root/Java source", "Label")
         super.init("\(path)/Root", "GridContainer")
     }
 }

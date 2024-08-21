@@ -3,123 +3,123 @@ import SwiftGodot
 class GDTree {
     private init() {}
 
-    let Main = MainScene("/root")
-    let Waypoint = WaypointScene("/root")
+    static let Main = MainScene("/root")
+    static let Waypoint = WaypointScene("/root")
 }
 
-class MainScene: NodeRef<Node3D> {
+class MainScene: NodeKey<Node3D> {
     let BlueCube: BlueCubeTree
     let GreenCube: GreenCubeTree
     let YellowCube: YellowCubeTree
     let RedCube: RedCubeTree
-    let Camera3D: NodeRef<Camera3D>
-    let Label: NodeRef<Label>
-    let Ground: NodeRef<MeshInstance3D>
-    let WhiteCube: NodeRef<MeshInstance3D>
+    let Camera3D: NodeKey<Camera3D>
+    let Label: NodeKey<Label>
+    let Ground: NodeKey<MeshInstance3D>
+    let WhiteCube: NodeKey<MeshInstance3D>
     let Environment: EnvironmentTree
 
     init(_ path: String) {
-        BlueCube = BlueCubeTree(path)
-        GreenCube = GreenCubeTree(path)
-        YellowCube = YellowCubeTree(path)
-        RedCube = RedCubeTree(path)
-        Camera3D = ("\(path)/Main/Camera3D", "Camera3D")
-        Label = ("\(path)/Main/Label", "Label")
-        Ground = ("\(path)/Main/Ground", "MeshInstance3D")
-        WhiteCube = ("\(path)/Main/WhiteCube", "MeshInstance3D")
-        Environment = EnvironmentTree(path)
+        BlueCube = BlueCubeTree("\(path)/Main")
+        GreenCube = GreenCubeTree("\(path)/Main")
+        YellowCube = YellowCubeTree("\(path)/Main")
+        RedCube = RedCubeTree("\(path)/Main")
+        Camera3D = NodeKey("\(path)/Main/Camera3D", "Camera3D")
+        Label = NodeKey("\(path)/Main/Label", "Label")
+        Ground = NodeKey("\(path)/Main/Ground", "MeshInstance3D")
+        WhiteCube = NodeKey("\(path)/Main/WhiteCube", "MeshInstance3D")
+        Environment = EnvironmentTree("\(path)/Main")
         super.init("\(path)/Main", "Node3D")
     }
 
-    class BlueCubeTree: NodeRef<MeshInstance3D> {
+    class BlueCubeTree: NodeKey<MeshInstance3D> {
         let WaypointAnchor: WaypointAnchorTree
 
         init(_ path: String) {
-            WaypointAnchor = WaypointAnchorTree(path)
-            super.init("\(path)/Main/BlueCube", "MeshInstance3D")
+            WaypointAnchor = WaypointAnchorTree("\(path)/BlueCube")
+            super.init("\(path)/BlueCube", "MeshInstance3D")
         }
 
-        class WaypointAnchorTree: NodeRef<Marker3D> {
+        class WaypointAnchorTree: NodeKey<Marker3D> {
             let Waypoint: WaypointScene
 
             init(_ path: String) {
-                Waypoint = WaypointScene("\(path)/Main/BlueCube/WaypointAnchor/Waypoint")
-                super.init("\(path)/Main/BlueCube/WaypointAnchor", "Marker3D")
+                Waypoint = WaypointScene("\(path)/WaypointAnchor")
+                super.init("\(path)/WaypointAnchor", "Marker3D")
             }
         }
     }
 
-    class GreenCubeTree: NodeRef<MeshInstance3D> {
+    class GreenCubeTree: NodeKey<MeshInstance3D> {
         let WaypointAnchor: WaypointAnchorTree
 
         init(_ path: String) {
-            WaypointAnchor = WaypointAnchorTree(path)
-            super.init("\(path)/Main/GreenCube", "MeshInstance3D")
+            WaypointAnchor = WaypointAnchorTree("\(path)/GreenCube")
+            super.init("\(path)/GreenCube", "MeshInstance3D")
         }
 
-        class WaypointAnchorTree: NodeRef<Marker3D> {
+        class WaypointAnchorTree: NodeKey<Marker3D> {
             let Waypoint: WaypointScene
 
             init(_ path: String) {
-                Waypoint = WaypointScene("\(path)/Main/GreenCube/WaypointAnchor/Waypoint")
-                super.init("\(path)/Main/GreenCube/WaypointAnchor", "Marker3D")
+                Waypoint = WaypointScene("\(path)/WaypointAnchor")
+                super.init("\(path)/WaypointAnchor", "Marker3D")
             }
         }
     }
 
-    class YellowCubeTree: NodeRef<MeshInstance3D> {
+    class YellowCubeTree: NodeKey<MeshInstance3D> {
         let WaypointAnchor: WaypointAnchorTree
 
         init(_ path: String) {
-            WaypointAnchor = WaypointAnchorTree(path)
-            super.init("\(path)/Main/YellowCube", "MeshInstance3D")
+            WaypointAnchor = WaypointAnchorTree("\(path)/YellowCube")
+            super.init("\(path)/YellowCube", "MeshInstance3D")
         }
 
-        class WaypointAnchorTree: NodeRef<Marker3D> {
+        class WaypointAnchorTree: NodeKey<Marker3D> {
             let Waypoint: WaypointScene
 
             init(_ path: String) {
-                Waypoint = WaypointScene("\(path)/Main/YellowCube/WaypointAnchor/Waypoint")
-                super.init("\(path)/Main/YellowCube/WaypointAnchor", "Marker3D")
+                Waypoint = WaypointScene("\(path)/WaypointAnchor")
+                super.init("\(path)/WaypointAnchor", "Marker3D")
             }
         }
     }
 
-    class RedCubeTree: NodeRef<MeshInstance3D> {
+    class RedCubeTree: NodeKey<MeshInstance3D> {
         let WaypointAnchor: WaypointAnchorTree
 
         init(_ path: String) {
-            WaypointAnchor = WaypointAnchorTree(path)
-            super.init("\(path)/Main/RedCube", "MeshInstance3D")
+            WaypointAnchor = WaypointAnchorTree("\(path)/RedCube")
+            super.init("\(path)/RedCube", "MeshInstance3D")
         }
 
-        class WaypointAnchorTree: NodeRef<Marker3D> {
+        class WaypointAnchorTree: NodeKey<Marker3D> {
             let Waypoint: WaypointScene
 
             init(_ path: String) {
-                Waypoint = WaypointScene("\(path)/Main/RedCube/WaypointAnchor/Waypoint")
-                super.init("\(path)/Main/RedCube/WaypointAnchor", "Marker3D")
+                Waypoint = WaypointScene("\(path)/WaypointAnchor")
+                super.init("\(path)/WaypointAnchor", "Marker3D")
             }
         }
     }
 
-    class EnvironmentTree: NodeRef<WorldEnvironment> {
-        let Sun: NodeRef<DirectionalLight3D>
+    class EnvironmentTree: NodeKey<WorldEnvironment> {
+        let Sun: NodeKey<DirectionalLight3D>
 
         init(_ path: String) {
-            Sun = NodeRef<DirectionalLight3D>("\(path)/Main/Environment/Sun", "DirectionalLight3D")
-            super.init("\(path)/Main/Environment", "WorldEnvironment")
+            Sun = NodeKey("\(path)/Environment/Sun", "DirectionalLight3D")
+            super.init("\(path)/Environment", "WorldEnvironment")
         }
     }
 }
 
-class WaypointScene: NodeRef<Control> {
-    let Label: NodeRef<Label>
-    let Marker: NodeRef<TextureRect>
+class WaypointScene: NodeKey<Control> {
+    let Label: NodeKey<Label>
+    let Marker: NodeKey<TextureRect>
 
     init(_ path: String) {
-        Label = NodeRef<Label>("\(path)/Waypoint/Label", "Label")
-        Marker = NodeRef<TextureRect>("\(path)/Waypoint/Marker", "TextureRect")
+        Label = NodeKey("\(path)/Waypoint/Label", "Label")
+        Marker = NodeKey("\(path)/Waypoint/Marker", "TextureRect")
         super.init("\(path)/Waypoint", "Control")
     }
 }

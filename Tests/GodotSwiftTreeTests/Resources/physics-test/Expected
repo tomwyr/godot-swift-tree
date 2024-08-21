@@ -7,13 +7,13 @@ class GDTree {
 }
 
 class MainScene: NodeKey<Control> {
-    let TestsMenu: NodeRef<MenuButton>
-    let LabelControls: NodeRef<Label>
-    let LabelFPS: NodeRef<Label>
-    let LabelEngine: NodeRef<Label>
-    let LabelVersion: NodeRef<Label>
-    let LabelTest: NodeRef<Label>
-    let LabelPause: NodeRef<Label>
+    let TestsMenu: NodeKey<MenuButton>
+    let LabelControls: NodeKey<Label>
+    let LabelFPS: NodeKey<Label>
+    let LabelEngine: NodeKey<Label>
+    let LabelVersion: NodeKey<Label>
+    let LabelTest: NodeKey<Label>
+    let LabelPause: NodeKey<Label>
     let PanelLog: PanelLogTree
 
     init(_ path: String) {
@@ -24,45 +24,36 @@ class MainScene: NodeKey<Control> {
         LabelVersion = NodeKey("\(path)/Main/LabelVersion", "Label")
         LabelTest = NodeKey("\(path)/Main/LabelTest", "Label")
         LabelPause = NodeKey("\(path)/Main/LabelPause", "Label")
-        PanelLog = PanelLogTree(path)
+        PanelLog = PanelLogTree("\(path)/Main")
         super.init("\(path)/Main", "Control")
     }
 
-    class MobPathTree: NodeKey<Path2D> {
-        let MobSpawnLocation: NodeKey<PathFollow2D>
-
-        init(_ path: String) {
-            MobSpawnLocation = NodeKey("\(path)/Main/MobPath/MobSpawnLocation", "PathFollow2D")
-            super.init("\(path)/Main/MobPath", "Path2D")
-        }
-    }
-
-    class PanelLogTree: NodeRef<Panel> {
-        let ButtonClear: NodeRef<Button>
-        let CheckBoxScroll: NodeRef<CheckButton>
+    class PanelLogTree: NodeKey<Panel> {
+        let ButtonClear: NodeKey<Button>
+        let CheckBoxScroll: NodeKey<CheckButton>
         let ScrollLog: ScrollLogTree
 
         init(_ path: String) {
-            ButtonClear = ("\(path)/Main/PanelLog/ButtonClear", "Button")
-            CheckBoxScroll = ("\(path)/Main/PanelLog/CheckBoxScroll", "CheckButton")
-            ScrollLog = ScrollLogTree(path)
-            super.init("\(path)/Main/PanelLog", "Panel")
+            ButtonClear = NodeKey("\(path)/PanelLog/ButtonClear", "Button")
+            CheckBoxScroll = NodeKey("\(path)/PanelLog/CheckBoxScroll", "CheckButton")
+            ScrollLog = ScrollLogTree("\(path)/PanelLog")
+            super.init("\(path)/PanelLog", "Panel")
         }
 
-        class ScrollLogTree: NodeRef<ScrollContainer> {
+        class ScrollLogTree: NodeKey<ScrollContainer> {
             let VBoxLog: VBoxLogTree
 
             init(_ path: String) {
-                VBoxLog = VBoxLogTree(path)
-                super.init("\(path)/Main/PanelLog/ScrollLog", "ScrollContainer")
+                VBoxLog = VBoxLogTree("\(path)/ScrollLog")
+                super.init("\(path)/ScrollLog", "ScrollContainer")
             }
 
-            class VBoxLogTree: NodeRef<VBoxContainer> {
-                let LabelLog: NodeRef<Label>
+            class VBoxLogTree: NodeKey<VBoxContainer> {
+                let LabelLog: NodeKey<Label>
 
                 init(_ path: String) {
-                    LabelLog = NodeRef<Label>("\(path)/Main/PanelLog/ScrollLog/VBoxLog/LabelLog", "Label")
-                    super.init("\(path)/Main/PanelLog/ScrollLog/VBoxLog", "VBoxContainer")
+                    LabelLog = NodeKey("\(path)/VBoxLog/LabelLog", "Label")
+                    super.init("\(path)/VBoxLog", "VBoxContainer")
                 }
             }
         }

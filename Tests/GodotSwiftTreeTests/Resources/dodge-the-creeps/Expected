@@ -38,13 +38,13 @@ class MainScene: NodeKey<Node> {
 
     init(_ path: String) {
         ColorRect = NodeKey("\(path)/Main/ColorRect", "ColorRect")
-        Player = PlayerScene("\(path)/Main/Player")
+        Player = PlayerScene("\(path)/Main")
         MobTimer = NodeKey("\(path)/Main/MobTimer", "Timer")
         ScoreTimer = NodeKey("\(path)/Main/ScoreTimer", "Timer")
         StartTimer = NodeKey("\(path)/Main/StartTimer", "Timer")
         StartPosition = NodeKey("\(path)/Main/StartPosition", "Marker2D")
-        MobPath = MobPathTree(path)
-        HUD = HUDScene("\(path)/Main/HUD")
+        MobPath = MobPathTree("\(path)/Main")
+        HUD = HUDScene("\(path)/Main")
         Music = NodeKey("\(path)/Main/Music", "AudioStreamPlayer")
         DeathSound = NodeKey("\(path)/Main/DeathSound", "AudioStreamPlayer")
         super.init("\(path)/Main", "Node")
@@ -54,8 +54,8 @@ class MainScene: NodeKey<Node> {
         let MobSpawnLocation: NodeKey<PathFollow2D>
 
         init(_ path: String) {
-            MobSpawnLocation = NodeKey("\(path)/Main/MobPath/MobSpawnLocation", "PathFollow2D")
-            super.init("\(path)/Main/MobPath", "Path2D")
+            MobSpawnLocation = NodeKey("\(path)/MobPath/MobSpawnLocation", "PathFollow2D")
+            super.init("\(path)/MobPath", "Path2D")
         }
     }
 }

@@ -5,8 +5,8 @@ public struct GodotNodeTreeConfig {
 }
 
 public class GodotSwiftProject {
-  private let projectPath: String
-  private let outputPath: String
+  let projectPath: String
+  let outputPath: String
 
   init(projectPath: String, outputPath: String) {
     self.projectPath = projectPath
@@ -20,7 +20,9 @@ public class GodotSwiftProject {
       .filter { $0.pathExtension == "tscn" }
       .map { file in
         let fileName = file.deletingPathExtension().lastPathComponent
-        let name = fileName.split(whereSeparator: ["_", "-"].contains).map(\.capitalized).joined()
+        let name = fileName.split(whereSeparator: ["_", "-"].contains)
+          .map(\.firstCapitalized)
+          .joined()
         let content = try String(contentsOf: file)
         return SceneData(name: name, content: content)
       }.sorted(by: { $0.name <= $1.name })

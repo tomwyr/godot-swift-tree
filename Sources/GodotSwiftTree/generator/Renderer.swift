@@ -2,10 +2,10 @@ class NodeTreeRenderer {
   func render(scenes: [Scene]) -> String {
     let header = renderHeader()
     let nodeTree = renderNodeTree(scenes: scenes)
-    let sceneNodes = scenes.map(renderScene).joinLines(spacing: 2)
+    let sceneNodes = scenes.map(renderScene).joinLines(spacing: 2).trimEmptyLines()
     let types = renderTypes()
 
-    return [header, nodeTree, sceneNodes, types].compactMap { $0 }
+    return [header, nodeTree, sceneNodes, types]
       .joinLines(spacing: 2) + "\n"
   }
 
@@ -60,24 +60,24 @@ class NodeTreeRenderer {
     let nodePath = "\(parentPath)/\(node.name)"
     let symbolName = node.name
       .split(separator: #/\s+/#)
-      .enumerated().map { index, s in index == 0 ? String(s) : s.capitalized }
+      .enumerated().map { index, s in index == 0 ? String(s) : s.firstCapitalized }
       .joined()
 
     return switch node {
     case let .parentNode(node):
       (
         field: "let \(symbolName): \(symbolName)Tree",
-        initializer: #"\#(symbolName) = \#(symbolName)Tree(path)"#,
+        initializer: #"\#(symbolName) = \#(symbolName)Tree("\#(parentPath)")"#,
         nestedClass: renderParentNode(
           node: node,
-          nodePath: parentPath,
+          nodePath: #"\(path)/\#(node.name)"#,
           className: "\(symbolName)Tree"
         )
       )
 
     case let .leafNode(node):
       (
-        field: "let \(symbolName): NodeKey<\(node)>",
+        field: "let \(symbolName): NodeKey<\(node.type)>",
         initializer: #"\#(symbolName) = NodeKey("\#(nodePath)", "\#(node.type)")"#,
         nestedClass: nil
       )
@@ -85,7 +85,7 @@ class NodeTreeRenderer {
     case .nestedScene(_):
       (
         field: "let \(symbolName): \(symbolName)Scene",
-        initializer: #"\#(symbolName) = \#(symbolName)Scene("\#(nodePath)")"#,
+        initializer: #"\#(symbolName) = \#(symbolName)Scene("\#(parentPath)")"#,
         nestedClass: nil
       )
     }
@@ -97,7 +97,7 @@ class NodeTreeRenderer {
 
     let children = node.children.map { child in renderNode(node: child, parentPath: nodePath) }
     let fields = children.map(\.field).joinLines().indentLine()
-    let initializers = children.map(\.initializer).joinLines().indentLine()
+    let initializers = children.map(\.initializer).joinLines().indentLine(times: 2)
     let nestedClasses = children.compactMap(\.nestedClass).joinLines(spacing: 2).indentLine()
 
     var body = """
@@ -111,6 +111,7 @@ class NodeTreeRenderer {
 
     if !nestedClasses.isEmpty {
       body += """
+
 
             \(nestedClasses)
         """
@@ -204,6 +205,13 @@ extension String {
   fileprivate func indentLine(times: Int = 1) -> String {
     let whiteSpace = String(repeating: "    ", count: times)
     return components(separatedBy: .newlines).joined(separator: "\n" + whiteSpace)
+  }
+
+  fileprivate func trimEmptyLines() -> String {
+    return split(separator: "\n", omittingEmptySubsequences: false)
+      .map {
+        $0.replacingOccurrences(of: #"^.*\s+$"#, with: "", options: .regularExpression)
+      }.joined(separator: "\n")
   }
 }
 

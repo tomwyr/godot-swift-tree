@@ -3,28 +3,28 @@ import SwiftGodot
 class GDTree {
     private init() {}
 
-    let SceneA = SceneAScene("/root")
-    let SceneB = SceneBScene("/root")
+    static let SceneA = SceneAScene("/root")
+    static let SceneB = SceneBScene("/root")
 }
 
-class SceneAScene: NodeRef<Panel> {
-    let Label: NodeRef<Label>
-    let GoToScene: NodeRef<Button>
+class SceneAScene: NodeKey<Panel> {
+    let Label: NodeKey<Label>
+    let GoToScene: NodeKey<Button>
 
-    init(_: String) {
-        Label = NodeRef<Label>("\(path)/SceneA/Label", "Label")
-        GoToScene = NodeRef<Button>("\(path)/SceneA/GoToScene", "Button")
+    init(_ path: String) {
+        Label = NodeKey("\(path)/SceneA/Label", "Label")
+        GoToScene = NodeKey("\(path)/SceneA/GoToScene", "Button")
         super.init("\(path)/SceneA", "Panel")
     }
 }
 
-class SceneBScene: NodeRef<Panel> {
-    let Label: NodeRef<Label>
-    let GoToScene: NodeRef<Button>
+class SceneBScene: NodeKey<Panel> {
+    let Label: NodeKey<Label>
+    let GoToScene: NodeKey<Button>
 
-    init(_: String) {
-        Label = NodeRef<Label>("\(path)/SceneB/Label", "Label")
-        GoToScene = NodeRef<Button>("\(path)/SceneB/GoToScene", "Button")
+    init(_ path: String) {
+        Label = NodeKey("\(path)/SceneB/Label", "Label")
+        GoToScene = NodeKey("\(path)/SceneB/GoToScene", "Button")
         super.init("\(path)/SceneB", "Panel")
     }
 }

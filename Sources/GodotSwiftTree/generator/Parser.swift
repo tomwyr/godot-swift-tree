@@ -103,7 +103,7 @@ class NodeParams {
 
     if case let (nil, instance?) = (type, instance) {
       if let scenePath = scenePathsById[instance],
-        let scene = parseSceneName(scenePath: scenePath)?.capitalized
+        let scene = parseSceneName(scenePath: scenePath)?.firstCapitalized
       {
         return .nestedScene(NestedScene(name: name, scene: scene))
       }
@@ -115,14 +115,15 @@ class NodeParams {
 }
 
 private func splitToEntries(data: String, entryType: String) -> [String] {
-  let pattern = Regex { "\\[\(entryType) .*]" }
-  let matches = data.matches(of: pattern)
+  let pattern = #"\[\#(entryType) .*\]"#
+  let regex = try! Regex<Substring>(pattern)
+  let matches = data.matches(of: regex)
   return matches.compactMap { String($0.output) }
 }
 
 private func parseEntryParams(entry: String) -> [String: String] {
-  let pattern = #/(?:(\w+)=(?:\w+\("(.+)"\)|"(.+?)"))+/#
-  let matches = entry.matches(of: pattern)
+  let regex = #/(?:(\w+)=(?:\w+\("(.+)"\)|"(.+?)"))+/#
+  let matches = entry.matches(of: regex)
   return matches.reduce(into: [String: String]()) { params, match in
     let (_, key, argumentValue, plainValue) = match.output
     let value = argumentValue ?? plainValue ?? ""
@@ -131,8 +132,8 @@ private func parseEntryParams(entry: String) -> [String: String] {
 }
 
 private func parseSceneName(scenePath: String) -> String? {
-  let pattern = #/^res://(.*).tscn$/#
-  let matches = scenePath.matches(of: pattern)
+  let regex = #/^res://(.*).tscn$/#
+  let matches = scenePath.matches(of: regex)
   let groups = matches.first?.output
   return (groups?.1).map { String($0) }
 }

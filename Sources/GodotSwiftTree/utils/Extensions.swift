@@ -30,3 +30,23 @@ extension URL {
     return files
   }
 }
+
+extension String {
+  var firstCapitalized: String {
+    if let first = first {
+      first.uppercased() + dropFirst()
+    } else {
+      ""
+    }
+  }
+}
+
+extension Substring {
+  var firstCapitalized: String {
+    if let first = first {
+      first.uppercased() + dropFirst()
+    } else {
+      ""
+    }
+  }
+}
