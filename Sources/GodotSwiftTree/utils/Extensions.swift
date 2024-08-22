@@ -1,7 +1,7 @@
 import Foundation
 
 extension URL {
-  func walkTopDown() throws -> any Sequence<URL> {
+  func walkTopDown(includeHidden: Bool = true) throws -> any Sequence<URL> {
     let fm = FileManager.default
 
     func isDirectory(_ file: URL) -> Bool? {
@@ -17,17 +17,26 @@ extension URL {
 
     while !directories.isEmpty {
       let directory = directories.removeFirst()
+      guard includeHidden || !directory.hidden else { continue }
+
       let dirFiles = try fm.contentsOfDirectory(atPath: directory.path()).map { item in
         directory.appending(path: item)
       }
 
       for file in dirFiles {
         guard let directory = isDirectory(file) else { continue }
+        guard includeHidden || !file.hidden else { continue }
         directory ? directories.append(file) : files.append(file)
       }
     }
 
     return files
+  }
+}
+
+extension URL {
+  var hidden: Bool {
+    lastPathComponent.starts(with: ".")
   }
 }
 

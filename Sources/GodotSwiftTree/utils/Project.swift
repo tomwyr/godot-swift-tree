@@ -17,7 +17,7 @@ public class GodotSwiftProject {
   func readScenes() throws -> [SceneData] {
     let directory = URL(fileURLWithPath: projectPath).deletingLastPathComponent()
 
-    return try directory.walkTopDown()
+    return try directory.walkTopDown(includeHidden: false)
       .filter { $0.pathExtension == "tscn" }
       .map { file in
         let fileName = file.deletingPathExtension().lastPathComponent
