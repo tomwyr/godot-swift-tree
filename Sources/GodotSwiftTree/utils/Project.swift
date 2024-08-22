@@ -2,6 +2,7 @@ import Foundation
 
 public struct GodotNodeTreeConfig {
   let projectPath: String?
+  let outputDir: String?
 }
 
 public class GodotSwiftProject {
@@ -14,7 +15,7 @@ public class GodotSwiftProject {
   }
 
   func readScenes() throws -> [SceneData] {
-    let directory = URL(fileURLWithPath: projectPath, isDirectory: true)
+    let directory = URL(fileURLWithPath: projectPath).deletingLastPathComponent()
 
     return try directory.walkTopDown()
       .filter { $0.pathExtension == "tscn" }
@@ -36,21 +37,21 @@ public class GodotSwiftProject {
 
 extension GodotSwiftProject {
   static func create(rootPath: String, config: GodotNodeTreeConfig) throws -> GodotSwiftProject {
-    let projectRelativePath = config.projectPath
-    let projectPath = try getProjectPath(rootPath: rootPath, relativePath: projectRelativePath)
-    let outputPath = getOutputPath(rootPath: rootPath)
+    let projectPath = try getProjectPath(rootPath: rootPath, config: config)
+    let outputPath = getOutputPath(rootPath: rootPath, config: config)
 
     return GodotSwiftProject(projectPath: projectPath, outputPath: outputPath)
   }
 
-  private static func getProjectPath(rootPath: String, relativePath: String?) throws -> String {
+  private static func getProjectPath(rootPath: String, config: GodotNodeTreeConfig) throws -> String
+  {
     var url = URL(filePath: rootPath)
-    if let relativePath {
-      url = url.appending(path: relativePath)
+    if let projectPath = config.projectPath {
+      url = url.appending(path: projectPath)
     }
     url = url.appending(path: "project.godot")
 
-    let path = url.absoluteString
+    let path = url.path()
 
     let fm = FileManager.default
     guard fm.fileExists(atPath: path) else {
@@ -60,8 +61,14 @@ extension GodotSwiftProject {
     return path
   }
 
-  private static func getOutputPath(rootPath: String) -> String {
-    let fileName = "GodotNodeTree.swift"
-    return URL(filePath: rootPath).appending(path: fileName).absoluteString
+  private static func getOutputPath(rootPath: String, config: GodotNodeTreeConfig) -> String {
+    print(rootPath)
+    print(config)
+    var url = URL(filePath: rootPath)
+    if let outputDir = config.outputDir {
+      url.append(path: outputDir)
+    }
+    url.append(path: "GodotNodeTree.swift")
+    return url.path()
   }
 }
