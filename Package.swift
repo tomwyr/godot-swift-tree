@@ -19,7 +19,7 @@ let package = Package(
       name: "GodotSwiftTreePlugin",
       capability: .command(
         intent: .custom(
-          verb: "generate",
+          verb: "generate-node-tree",
           description: "Generates statically typed node tree representation of Godot project"
         ),
         permissions: [
