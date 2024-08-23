@@ -82,10 +82,10 @@ class NodeTreeRenderer {
         nestedClass: nil
       )
 
-    case .nestedScene(_):
+    case let .nestedScene(node):
       (
-        field: "let \(symbolName): \(symbolName)Scene",
-        initializer: #"\#(symbolName) = \#(symbolName)Scene("\#(parentPath)")"#,
+        field: "let \(symbolName): \(node.scene)Scene",
+        initializer: #"\#(symbolName) = \#(node.scene)Scene("\#(parentPath)")"#,
         nestedClass: nil
       )
     }
