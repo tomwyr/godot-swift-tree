@@ -1,2 +1,4 @@
+.build
 .import
+.swiftpm
 logs/

@@ -32,7 +32,7 @@ wait_time = 0.5
 wait_time = 2.0
 one_shot = true
 
-[node name="StartPosition" type="Position2D" parent="."]
+[node name="StartPosition" type="Marker2D" parent="."]
 position = Vector2( 240, 450 )
 
 [node name="MobPath" type="Path2D" parent="."]

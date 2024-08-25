@@ -1,0 +1,33 @@
+{
+  "originHash" : "4e75e25912f0d7e788aa93c481bae6dae6730aaa29f39cb371fccb880e99abc9",
+  "pins" : [
+    {
+      "identity" : "godot-swift-tree",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tomwyr/godot-swift-tree",
+      "state" : {
+        "branch" : "master",
+        "revision" : "a2f862cc39c064186cc023b5f92fa21c8dd93dd8"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax",
+      "state" : {
+        "revision" : "2bc86522d115234d1f588efe2bcb4ce4be8f8b82",
+        "version" : "510.0.3"
+      }
+    },
+    {
+      "identity" : "swiftgodot",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/migueldeicaza/SwiftGodot",
+      "state" : {
+        "branch" : "main",
+        "revision" : "a1fa9187c6abfadbc6436ce610fb5557f0d0930b"
+      }
+    }
+  ],
+  "version" : 3
+}
