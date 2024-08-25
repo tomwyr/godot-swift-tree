@@ -62,8 +62,6 @@ extension GodotSwiftProject {
   }
 
   private static func getOutputPath(rootPath: String, config: GodotNodeTreeConfig) -> String {
-    print(rootPath)
-    print(config)
     var url = URL(filePath: rootPath)
     if let outputDir = config.outputDir {
       url.append(path: outputDir)
