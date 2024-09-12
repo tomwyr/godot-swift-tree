@@ -151,12 +151,19 @@ class NodeKey<T: Node> {
         self.nodeRef = nodeRef
     }
 
-    static subscript<E: Node>(
-        _enclosingInstance instance: E,
-        wrapped _: ReferenceWritableKeyPath<E, T>,
-        storage storageKeyPath: ReferenceWritableKeyPath<E, NodeRef<T>>
+    static subscript<EnclosingSelf: Node>(
+        _enclosingInstance instance: EnclosingSelf,
+        wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, T>,
+        storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, NodeRef<T>>
     ) -> T {
-        return instance[keyPath: storageKeyPath].wrappedValue(node: instance)
+        get {
+            instance[keyPath: storageKeyPath].wrappedValue(node: instance)
+        }
+        set {
+            fatalError(
+                "Node reference cannot point to a different node after it's been initialized."
+            )
+        }
     }
 
     func wrappedValue(node: Node) -> T {

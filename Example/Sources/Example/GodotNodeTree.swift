@@ -68,8 +68,9 @@ class MobScene: NodeKey<RigidBody2D> {
     init(_ path: String) {
         AnimatedSprite2D = NodeKey("\(path)/Mob/AnimatedSprite2D", "AnimatedSprite2D")
         CollisionShape2D = NodeKey("\(path)/Mob/CollisionShape2D", "CollisionShape2D")
-        VisibleOnScreenNotifier2D = NodeKey("\(path)/Mob/VisibleOnScreenNotifier2D", "VisibleOnScreenNotifier2D")
-        super.init("\(path)/Mob", "RigidBody2D")
+        VisibleOnScreenNotifier2D = NodeKey(
+            "\(path)/Mob/VisibleOnScreenNotifier2D", "VisibleOnScreenNotifier2D")
+        super.init("\(path)/Mob", "RigidDynamicBody2D")
     }
 }
 
@@ -138,7 +139,11 @@ class NodeKey<T: Node> {
         }
     }
 
-    @available(*, unavailable, message: "NodeRef's value cannot be accessed without a reference to another node object. Use wrappedValue(:node), or declare the referenced node with @NodeRef property wrapper instead.")
+    @available(
+        *, unavailable,
+        message:
+            "NodeRef's value cannot be accessed without a reference to another node object. Use wrappedValue(:node), or declare the referenced node with @NodeRef property wrapper instead."
+    )
     var wrappedValue: T {
         get { fatalError() }
         set { fatalError() }
