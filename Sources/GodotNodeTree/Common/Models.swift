@@ -3,6 +3,13 @@ struct SceneData {
   let content: String
 }
 
+struct NodeParams {
+  let name: String
+  let type: String?
+  let instance: String?
+  let parent: String?
+}
+
 struct NodeTree: Codable {
   let scenes: [Scene]
 }

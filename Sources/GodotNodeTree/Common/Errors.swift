@@ -1,4 +1,4 @@
-enum GeneratorError: Error, CustomStringConvertible {
+enum GodotNodeTreeError: Error, CustomStringConvertible {
   case unexpectedNodeParameters(nodeParams: NodeParams)
   case unexpectedSceneResource(instance: String)
   case parentNodeNotFound(sceneName: String)

@@ -7,4 +7,4 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
 
-Plugins/GodotSwiftTreePlugin/libs
+Plugins/GodotSwiftTreePlugin/Libs

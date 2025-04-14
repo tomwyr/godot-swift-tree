@@ -1,11 +1,11 @@
 import Darwin
 import Foundation
 
-func resolveProjectTree(projectPath: String, libPath: String) -> NodeTree? {
+func generateNodeTree(libPath: String, projectPath: String) -> NodeTree? {
   guard let handle = dlopen(libPath, RTLD_NOW) else { return nil }
   defer { dlclose(handle) }
 
-  guard let sym = dlsym(handle, "resolveProjectTree") else { return nil }
+  guard let sym = dlsym(handle, "generateNodeTree") else { return nil }
   let resolveProjectTreeBits = unsafeBitCast(sym, to: ResolveProjectTree.self)
 
   guard let projectPathPtr = strdup(projectPath) else { return nil }

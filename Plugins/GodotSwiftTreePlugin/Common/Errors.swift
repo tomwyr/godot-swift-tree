@@ -1,4 +1,4 @@
-enum GeneratorError: Error, CustomStringConvertible {
+enum GodotSwiftTreeError: Error, CustomStringConvertible {
   case invalidGodotProject
 
   var description: String {

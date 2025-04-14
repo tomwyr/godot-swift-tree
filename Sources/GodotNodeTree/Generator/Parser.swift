@@ -1,4 +1,3 @@
-import Foundation
 import RegexBuilder
 
 struct GodotNodesParser {
@@ -56,19 +55,14 @@ private struct NodesParser {
     let rootParams = params.first { $0.parent == nil }
 
     guard let rootParams else {
-      throw GeneratorError.parentNodeNotFound(sceneName: sceneName)
+      throw GodotNodeTreeError.parentNodeNotFound(sceneName: sceneName)
     }
 
     return try rootParams.toNode(childrenByParent, scenePathsById)
   }
 }
 
-private struct NodeParams {
-  let name: String
-  let type: String?
-  let instance: String?
-  let parent: String?
-
+extension NodeParams {
   func toNode(_ childrenByParent: [String?: [NodeParams]], _ scenePathsById: [String: String])
     throws -> NodeType
   {
@@ -96,10 +90,10 @@ private struct NodeParams {
       {
         return .nestedScene(NestedScene(name: name, scene: scene))
       }
-      throw GeneratorError.unexpectedSceneResource(instance: instance)
+      throw GodotNodeTreeError.unexpectedSceneResource(instance: instance)
     }
 
-    throw GeneratorError.unexpectedNodeParameters(nodeParams: self)
+    throw GodotNodeTreeError.unexpectedNodeParameters(nodeParams: self)
   }
 }
 
