@@ -1,9 +1,16 @@
-import PackagePlugin
+struct GenerateTreeCommand {
+  let environment: SwiftTreeEnvironment
+  let config: NodeTreeConfig
 
-class GenerateTreeCommand {
-  func run(context: PluginContext, config: GodotNodeTreeConfig) throws {
-    let projectPath = context.package.directory.string
-    let godotProject = try GodotSwiftProject.create(rootPath: projectPath, config: config)
-    _ = try NodeTreeGenerator().generate(project: godotProject)
+  func run() throws {
+    let renderer = NodeTreeRenderer()
+    let writer = NodeTreeWriter(rootPath: environment.pluginPath, config: config)
+    if let tree = resolveProjectTree(
+      projectPath: environment.pluginPath,
+      libPath: environment.libPath
+    ) {
+      let content = renderer.render(tree: tree)
+      try writer.write(content: content)
+    }
   }
 }
