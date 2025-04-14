@@ -32,9 +32,7 @@ extension URL {
 
     return files
   }
-}
 
-extension URL {
   var hidden: Bool {
     lastPathComponent.starts(with: ".")
   }
@@ -42,7 +40,7 @@ extension URL {
 
 extension String {
   var firstCapitalized: String {
-    if let first = first {
+    if let first {
       first.uppercased() + dropFirst()
     } else {
       ""
@@ -52,7 +50,7 @@ extension String {
 
 extension Substring {
   var firstCapitalized: String {
-    if let first = first {
+    if let first {
       first.uppercased() + dropFirst()
     } else {
       ""

@@ -1,14 +1,14 @@
 import Foundation
 import RegexBuilder
 
-class SceneNodesParser {
+struct GodotNodesParser {
   func parse(sceneData: SceneData) throws -> NodeType {
     let scenePathsById = ScenesParser().parse(sceneData: sceneData)
     return try NodesParser(scenePathsById: scenePathsById).parse(sceneData: sceneData)
   }
 }
 
-private class ScenesParser {
+private struct ScenesParser {
   func parse(sceneData: SceneData) -> [String: String] {
     let sceneIdsToPaths = splitToEntries(data: sceneData.content, entryType: "ext_resource")
       .map(parseEntryParams)
@@ -28,12 +28,8 @@ private class ScenesParser {
   }
 }
 
-private class NodesParser {
+private struct NodesParser {
   let scenePathsById: [String: String]
-
-  init(scenePathsById: [String: String]) {
-    self.scenePathsById = scenePathsById
-  }
 
   func parse(sceneData: SceneData) throws -> NodeType {
     let nodeParams = splitToEntries(data: sceneData.content, entryType: "node")
@@ -67,18 +63,11 @@ private class NodesParser {
   }
 }
 
-class NodeParams {
+private struct NodeParams {
   let name: String
   let type: String?
   let instance: String?
   let parent: String?
-
-  init(name: String, type: String?, instance: String?, parent: String?) {
-    self.name = name
-    self.type = type
-    self.instance = instance
-    self.parent = parent
-  }
 
   func toNode(_ childrenByParent: [String?: [NodeParams]], _ scenePathsById: [String: String])
     throws -> NodeType

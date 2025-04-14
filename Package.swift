@@ -12,7 +12,12 @@ let package = Package(
     .plugin(
       name: "GodotSwiftTreePlugin",
       targets: ["GodotSwiftTreePlugin"]
-    )
+    ),
+    .library(
+      name: "GodotNodeTree",
+      type: .dynamic,
+      targets: ["GodotNodeTree"]
+    ),
   ],
   targets: [
     .plugin(
@@ -30,8 +35,7 @@ let package = Package(
         ]
       )
     ),
-    .testTarget(
-      name: "GodotSwiftTreeTests"
-    ),
+    .testTarget(name: "GodotSwiftTreeTests"),
+    .target(name: "GodotNodeTree"),
   ]
 )
