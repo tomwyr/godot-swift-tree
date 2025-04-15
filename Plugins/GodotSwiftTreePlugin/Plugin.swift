@@ -19,11 +19,11 @@ extension GodotNodeTreeConfig {
 
 extension GodotSwiftTreeEnvironment {
   fileprivate init(context: PluginContext) {
-    pluginPath = context.package.directory.string
+    pluginPath = context.package.directoryURL.absoluteString
     libPath =
       URL(fileURLWithPath: #file)
       .deletingLastPathComponent()
-      .appending(components: "libs", "libGodotNodeTree.dylib")
+      .appending(components: "libs", "libGodotNodeTreeCore.dylib")
       .relativePath
   }
 }
