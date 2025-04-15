@@ -1,17 +1,13 @@
 import Foundation
 
 struct GenerateTreeCommand {
-  let environment: SwiftTreeEnvironment
-  let config: NodeTreeConfig
+  let environment: GodotSwiftTreeEnvironment
+  let config: GodotNodeTreeConfig
 
   func run() throws {
-    if let tree = generateNodeTree(
-      libPath: environment.libPath,
-      projectPath: try getProjectPath()
-    ) {
-      let content = NodeTreeRenderer().render(tree: tree)
-      try NodeTreeWriter().write(content: content, at: getOutputPath())
-    }
+    let tree = try generateNodeTree(libPath: environment.libPath, projectPath: try getProjectPath())
+    let content = NodeTreeRenderer().render(tree: tree)
+    try NodeTreeWriter().write(content: content, at: getOutputPath())
   }
 
   private func getProjectPath() throws -> String {

@@ -4,20 +4,20 @@ import PackagePlugin
 @main
 struct GodotSwiftTreePlugin: CommandPlugin {
   func performCommand(context: PluginContext, arguments: [String]) throws {
-    let config = NodeTreeConfig(arguments: arguments)
-    let environment = SwiftTreeEnvironment(context: context)
+    let config = GodotNodeTreeConfig(arguments: arguments)
+    let environment = GodotSwiftTreeEnvironment(context: context)
     try GenerateTreeCommand(environment: environment, config: config).run()
   }
 }
 
-extension NodeTreeConfig {
+extension GodotNodeTreeConfig {
   fileprivate init(arguments: [String]) {
     projectPath = arguments.findArg(named: "--project-path")
     outputDir = arguments.findArg(named: "--output-dir")
   }
 }
 
-extension SwiftTreeEnvironment {
+extension GodotSwiftTreeEnvironment {
   fileprivate init(context: PluginContext) {
     pluginPath = context.package.directory.string
     libPath =

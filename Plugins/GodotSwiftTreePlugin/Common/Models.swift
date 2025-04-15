@@ -1,9 +1,9 @@
-struct SwiftTreeEnvironment {
+struct GodotSwiftTreeEnvironment {
   let pluginPath: String
   let libPath: String
 }
 
-struct NodeTreeConfig {
+struct GodotNodeTreeConfig {
   let projectPath: String?
   let outputDir: String?
 }
