@@ -67,7 +67,7 @@ extension Result {
     if let encoded = try? jsonEncode(self) {
       encoded
     } else {
-      #"{"error": "Unexpected encoding error of result \#(self)"}"#
+      #"{"err": "Unexpected encoding error of result \#(self)"}"#
     }
   }
 }

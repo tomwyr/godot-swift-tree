@@ -10,7 +10,7 @@ struct GenerateTreeCommand {
     try NodeTreeWriter().write(content: content, at: getOutputPath())
   }
 
-  private func getProjectPath() throws -> String {
+  private func getProjectPath() throws(GodotSwiftTreeError) -> String {
     var url = URL(filePath: environment.pluginPath)
     if let projectPath = config.projectPath {
       url = url.appending(path: projectPath)
@@ -20,7 +20,7 @@ struct GenerateTreeCommand {
 
     let fm = FileManager.default
     guard fm.fileExists(atPath: path) else {
-      throw GodotSwiftTreeError.invalidGodotProject
+      throw .invalidGodotProject
     }
 
     return path

@@ -12,6 +12,13 @@ struct NodeTree: Codable {
   let scenes: [Scene]
 }
 
+struct NodeParams: Codable {
+  let name: String
+  let type: String?
+  let instance: String?
+  let parent: String?
+}
+
 struct Scene: Codable {
   let name: String
   let root: NodeType
