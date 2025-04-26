@@ -126,7 +126,7 @@ struct NodeTreeRenderer {
 
     private func renderTypes() -> String {
         return """
-            class NodeKey<T: Node> {
+            class NodeKey<T: Node>: @unchecked Sendable {
                 private let path: String
                 private let type: String
 

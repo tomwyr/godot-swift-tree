@@ -6,27 +6,19 @@ let package = Package(
   name: "GodotSwiftTree",
   platforms: [.macOS(.v14)],
   products: [
-    .plugin(
-      name: "GodotSwiftTreePlugin",
-      targets: ["GodotSwiftTreePlugin"]
-    )
+    .executable(name: "GodotSwiftTree", targets: ["GodotSwiftTree"])
+  ],
+  dependencies: [
+    .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0")
   ],
   targets: [
-    .plugin(
-      name: "GodotSwiftTreePlugin",
-      capability: .command(
-        intent: .custom(
-          verb: "generate-node-tree",
-          description: "Generates statically typed node tree representation of Godot project"
-        ),
-        permissions: [
-          .writeToPackageDirectory(
-            reason:
-              "Godot Swift Tree writes generated source code to make it accessible from the project"
-          )
-        ]
-      )
+    .executableTarget(
+      name: "GodotSwiftTree",
+      dependencies: [
+        .product(name: "ArgumentParser", package: "swift-argument-parser")
+      ],
+      resources: [.copy("Resources")]
     ),
-    .testTarget(name: "GodotSwiftTreeTests"),
+    .testTarget(name: "GodotSwiftTreeTests", exclude: ["Resources"]),
   ]
 )

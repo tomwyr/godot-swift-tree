@@ -26,6 +26,7 @@ class HUDScene: NodeKey<CanvasLayer> {
 
 class MainScene: NodeKey<Node> {
     let ColorRect: NodeKey<ColorRect>
+    let ColorAnimator: NodeKey<ColorAnimator>
     let Player: PlayerScene
     let MobTimer: NodeKey<Timer>
     let ScoreTimer: NodeKey<Timer>
@@ -38,6 +39,7 @@ class MainScene: NodeKey<Node> {
 
     init(_ path: String) {
         ColorRect = NodeKey("\(path)/Main/ColorRect", "ColorRect")
+        ColorAnimator = NodeKey("\(path)/Main/ColorAnimator", "ColorAnimator")
         Player = PlayerScene("\(path)/Main")
         MobTimer = NodeKey("\(path)/Main/MobTimer", "Timer")
         ScoreTimer = NodeKey("\(path)/Main/ScoreTimer", "Timer")
@@ -68,9 +70,8 @@ class MobScene: NodeKey<RigidBody2D> {
     init(_ path: String) {
         AnimatedSprite2D = NodeKey("\(path)/Mob/AnimatedSprite2D", "AnimatedSprite2D")
         CollisionShape2D = NodeKey("\(path)/Mob/CollisionShape2D", "CollisionShape2D")
-        VisibleOnScreenNotifier2D = NodeKey(
-            "\(path)/Mob/VisibleOnScreenNotifier2D", "VisibleOnScreenNotifier2D")
-        super.init("\(path)/Mob", "RigidDynamicBody2D")
+        VisibleOnScreenNotifier2D = NodeKey("\(path)/Mob/VisibleOnScreenNotifier2D", "VisibleOnScreenNotifier2D")
+        super.init("\(path)/Mob", "RigidBody2D")
     }
 }
 
@@ -87,7 +88,7 @@ class PlayerScene: NodeKey<Area2D> {
     }
 }
 
-class NodeKey<T: Node> {
+class NodeKey<T: Node>: @unchecked Sendable {
     private let path: String
     private let type: String
 
@@ -139,11 +140,7 @@ class NodeKey<T: Node> {
         }
     }
 
-    @available(
-        *, unavailable,
-        message:
-            "NodeRef's value cannot be accessed without a reference to another node object. Use wrappedValue(:node), or declare the referenced node with @NodeRef property wrapper instead."
-    )
+    @available(*, unavailable, message: "NodeRef's value cannot be accessed without a reference to another node object. Use wrappedValue(:node), or declare the referenced node with @NodeRef property wrapper instead.")
     var wrappedValue: T {
         get { fatalError() }
         set { fatalError() }

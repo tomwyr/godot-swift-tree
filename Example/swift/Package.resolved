@@ -1,5 +1,5 @@
 {
-  "originHash" : "4e75e25912f0d7e788aa93c481bae6dae6730aaa29f39cb371fccb880e99abc9",
+  "originHash" : "4af3294557c1be81b8f2114f531228bff01cfaab841ad3e8488bee9b32533636",
   "pins" : [
     {
       "identity" : "godot-swift-tree",
@@ -7,7 +7,16 @@
       "location" : "https://github.com/tomwyr/godot-swift-tree",
       "state" : {
         "branch" : "master",
-        "revision" : "a2f862cc39c064186cc023b5f92fa21c8dd93dd8"
+        "revision" : "9d10c3a2bf5cf3fb51a47838ed63d2fb66829bcb"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser",
+      "state" : {
+        "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
+        "version" : "1.5.0"
       }
     },
     {
@@ -15,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax",
       "state" : {
-        "revision" : "2bc86522d115234d1f588efe2bcb4ce4be8f8b82",
-        "version" : "510.0.3"
+        "revision" : "0687f71944021d616d34d922343dcef086855920",
+        "version" : "600.0.1"
       }
     },
     {
@@ -25,7 +34,7 @@
       "location" : "https://github.com/migueldeicaza/SwiftGodot",
       "state" : {
         "branch" : "main",
-        "revision" : "a1fa9187c6abfadbc6436ce610fb5557f0d0930b"
+        "revision" : "20d2d7a35d2ad392ec556219ea004da14ab7c1d4"
       }
     }
   ],
