@@ -1,6 +1,8 @@
 import Foundation
 import XCTest
 
+@testable import GodotSwiftTree
+
 final class GodotSwiftTreeTests: XCTestCase {
   func testSingleSceneWithNestedNodes() throws {
     try test(testCase: "physics-test")
@@ -23,31 +25,34 @@ final class GodotSwiftTreeTests: XCTestCase {
   }
 
   private func test(testCase: String) throws {
-    let project = setUpTestProject(testCase: testCase)
-    defer { try? cleanUpTestProject(project: project) }
-    _ = try NodeTreeGenerator().generate(project: project)
-    try assertGeneratorOutput(project: project)
+    let generateTreeCommand = try setUpTestCommand(testCase: testCase)
+    defer { try? cleanUpTestProject(generateTreeCommand) }
+    try generateTreeCommand.run()
+    try assertGeneratedOutput(generateTreeCommand)
   }
 
-  private func setUpTestProject(testCase: String) -> GodotSwiftProject {
-    let testDir = URL(filePath: #file).deletingLastPathComponent()
-    let basePath = testDir.appending(path: "Resources").path()
+  private func setUpTestCommand(testCase: String) throws -> GenerateTreeCommand {
+    let libPath = URL(filePath: "Tests").appending(path: "NodeTreeGenerator.dylib").path()
+    let testCaseDir = URL(filePath: "Tests").appending(components: "Resources", testCase)
+    let projectPath = testCaseDir.appending(path: "scenes").path()
+    let outputPath = testCaseDir.appending(path: "Actual").path()
 
-    return GodotSwiftProject(
-      projectPath: "\(basePath)/\(testCase)/scenes",
-      outputPath: "\(basePath)/\(testCase)/Actual"
+    return GenerateTreeCommand(
+      libPath: libPath,
+      projectPath: projectPath,
+      outputPath: outputPath
     )
   }
 
-  private func cleanUpTestProject(project: GodotSwiftProject) throws {
-    let outputFilePath = URL(filePath: project.outputPath)
+  private func cleanUpTestProject(_ command: GenerateTreeCommand) throws {
+    let outputFilePath = URL(filePath: command.outputPath)
     try FileManager.default.removeItem(at: outputFilePath)
   }
 
-  private func assertGeneratorOutput(project: GodotSwiftProject) throws {
-    let expectedPath = URL(filePath: project.outputPath)
+  private func assertGeneratedOutput(_ command: GenerateTreeCommand) throws {
+    let expectedPath = URL(filePath: command.outputPath)
       .deletingLastPathComponent().appending(path: "Expected").path()
-    let actualPath = project.outputPath
+    let actualPath = command.outputPath
 
     let expected = try String(contentsOfFile: expectedPath, encoding: .utf8)
     let actual = try String(contentsOfFile: actualPath, encoding: .utf8)

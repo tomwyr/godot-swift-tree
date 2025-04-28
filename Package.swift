@@ -19,6 +19,10 @@ let package = Package(
       ],
       resources: [.copy("Resources")]
     ),
-    .testTarget(name: "GodotSwiftTreeTests", exclude: ["Resources"]),
+    .testTarget(
+      name: "GodotSwiftTreeTests",
+      dependencies: ["GodotSwiftTree"],
+      exclude: ["Resources", "NodeTreeGenerator.dylib"]
+    ),
   ]
 )
