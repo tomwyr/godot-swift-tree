@@ -1,13 +1,3 @@
-struct GodotSwiftTreeEnvironment {
-  let pluginPath: String
-  let libPath: String
-}
-
-struct GodotNodeTreeConfig {
-  let projectPath: String?
-  let outputDir: String?
-}
-
 struct NodeTree: Codable {
   let scenes: [Scene]
 }
