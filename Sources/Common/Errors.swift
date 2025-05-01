@@ -3,6 +3,7 @@ enum GodotSwiftTreeError: Error, CustomStringConvertible {
   case invalidLibResource
   case generatorUnavailable(path: String)
   case generatorUnexpectedResult
+  case generatorError(cause: GodotNodeTreeError)
   case writingTreeFailed(path: String)
 
   var description: String {
@@ -15,6 +16,8 @@ enum GodotSwiftTreeError: Error, CustomStringConvertible {
       "The node tree generator library is invalid or missing (expected at `\(path)`)."
     case .generatorUnexpectedResult:
       "The node tree generator returned an unexpected result data."
+    case let .generatorError(cause: cause):
+      cause.localizedDescription
     case let .writingTreeFailed(path):
       "Unable to write generated node tree at `\(path)`."
     }

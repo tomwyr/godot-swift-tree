@@ -5,9 +5,56 @@ struct GenerateTreeCommand {
   let projectPath: String
   let outputPath: String
 
-  func run() throws {
+  func run() throws(GodotSwiftTreeError) {
     let tree = try generateNodeTree(libPath: libPath, projectPath: projectPath)
     let content = NodeTreeRenderer().render(tree: tree)
     try NodeTreeWriter().write(content: content, at: outputPath)
+  }
+}
+
+extension GenerateTreeCommand {
+  init(input: GodotSwiftTreeInput) throws(GodotSwiftTreeError) {
+    self.init(
+      libPath: try Self.getLibPath(),
+      projectPath: try Self.getProjectPath(input),
+      outputPath: Self.getOutputPath(input)
+    )
+  }
+
+  static private var pluginPath: String {
+    FileManager.default.currentDirectoryPath
+  }
+
+  static private func getLibPath() throws(GodotSwiftTreeError) -> String {
+    let (resource, type) = ("libGodotNodeTreeCore", "dylib")
+    guard let libPath = Bundle.module.path(forResource: resource, ofType: type) else {
+      throw .invalidLibResource
+    }
+    return libPath
+  }
+
+  static private func getProjectPath(_ input: GodotSwiftTreeInput) throws(GodotSwiftTreeError)
+    -> String
+  {
+    var url = URL(filePath: pluginPath)
+    if let projectPath = input.projectPath {
+      url = url.appending(path: projectPath)
+    }
+    url = url.appending(path: "project.godot")
+    let path = url.path()
+
+    guard FileManager.default.fileExists(atPath: path) else {
+      throw .invalidGodotProject
+    }
+    return path
+  }
+
+  static private func getOutputPath(_ input: GodotSwiftTreeInput) -> String {
+    var url = URL(filePath: pluginPath)
+    if let outputDir = input.outputDir {
+      url.append(path: outputDir)
+    }
+    url.append(path: "GodotNodeTree.swift")
+    return url.path()
   }
 }

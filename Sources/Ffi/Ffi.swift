@@ -1,12 +1,17 @@
 import Darwin
 import Foundation
 
-func generateNodeTree(libPath: String, projectPath: String) throws -> NodeTree {
+func generateNodeTree(libPath: String, projectPath: String) throws(GodotSwiftTreeError) -> NodeTree
+{
   let resultStr = try callGenerateNodeTree(libPath: libPath, projectPath: projectPath)
   guard let result = Result<NodeTree, GodotNodeTreeError>(json: resultStr) else {
-    throw GodotSwiftTreeError.generatorUnexpectedResult
+    throw .generatorUnexpectedResult
   }
-  return try result.unwrap()
+  do {
+    return try result.unwrap()
+  } catch {
+    throw .generatorError(cause: error)
+  }
 }
 
 private func callGenerateNodeTree(libPath: String, projectPath: String)

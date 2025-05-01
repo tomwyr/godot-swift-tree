@@ -2,59 +2,20 @@ import ArgumentParser
 import Foundation
 
 @main
-struct GodotSwiftTreeCommand: ParsableCommand {
-  @Option()
+struct GodotSwiftTree: ParsableCommand {
+  @Option(help: "Relative path to the directory containing the Godot project.")
   var projectPath: String? = nil
 
-  @Option()
+  @Option(help: "The relative path to the directory where the node tree code will be generated.")
   var outputDir: String? = nil
 
-  func run() throws {
-    try GenerateTreeCommand(
-      libPath: try getLibPath(),
-      projectPath: try getProjectPath(),
-      outputPath: getOutputPath()
-    ).run()
+  func run() throws(GodotSwiftTreeError) {
+    let input = GodotSwiftTreeInput(projectPath: projectPath, outputDir: outputDir)
+    try GenerateTreeCommand(input: input).run()
   }
+}
 
-  private var pluginPath: String {
-    FileManager.default.currentDirectoryPath
-  }
-
-  private func getLibPath() throws(GodotSwiftTreeError)
-    -> String
-  {
-    let (resource, type) = ("libGodotNodeTreeCore", "dylib")
-    guard let libPath = Bundle.module.path(forResource: resource, ofType: type) else {
-      throw .invalidLibResource
-    }
-    return libPath
-  }
-
-  private func getProjectPath() throws(GodotSwiftTreeError)
-    -> String
-  {
-    var url = URL(filePath: pluginPath)
-    if let projectPath = projectPath {
-      url = url.appending(path: projectPath)
-    }
-    url = url.appending(path: "project.godot")
-    let path = url.path()
-
-    let fm = FileManager.default
-    guard fm.fileExists(atPath: path) else {
-      throw .invalidGodotProject
-    }
-
-    return path
-  }
-
-  private func getOutputPath() -> String {
-    var url = URL(filePath: pluginPath)
-    if let outputDir = outputDir {
-      url.append(path: outputDir)
-    }
-    url.append(path: "GodotNodeTree.swift")
-    return url.path()
-  }
+struct GodotSwiftTreeInput {
+  let projectPath: String?
+  let outputDir: String?
 }

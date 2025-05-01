@@ -6,7 +6,7 @@ let package = Package(
   name: "GodotSwiftTree",
   platforms: [.macOS(.v14)],
   products: [
-    .executable(name: "GodotSwiftTree", targets: ["GodotSwiftTree"])
+    .executable(name: "GenerateNodeTree", targets: ["GodotSwiftTree"])
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0")

@@ -37,7 +37,7 @@ extension Result: Codable {
     } else {
       throw DecodingError.dataCorruptedError(
         forKey: CodingKeys.ok, in: container,
-        debugDescription: "Invalid data format for Result enum"
+        debugDescription: "Invalid data format for the expected Result type"
       )
     }
   }
