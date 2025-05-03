@@ -1,5 +1,5 @@
 {
-  "originHash" : "c9449c731e8b01bebac0fc1daab69eebd4f25214bbb7109fa83d6ff8505f2434",
+  "originHash" : "4af3294557c1be81b8f2114f531228bff01cfaab841ad3e8488bee9b32533636",
   "pins" : [
     {
       "identity" : "godot-swift-tree",
@@ -7,7 +7,7 @@
       "location" : "https://github.com/tomwyr/godot-swift-tree",
       "state" : {
         "branch" : "master",
-        "revision" : "f113f87c6ef0a03e7aeadafb0034ea01708c32a2"
+        "revision" : "98c9b60cabfcf596d6d24fab0104847c3a2178a8"
       }
     },
     {
@@ -34,7 +34,7 @@
       "location" : "https://github.com/migueldeicaza/SwiftGodot",
       "state" : {
         "branch" : "main",
-        "revision" : "20d2d7a35d2ad392ec556219ea004da14ab7c1d4"
+        "revision" : "15079008c22ac9c290886099157639acae665c43"
       }
     }
   ],

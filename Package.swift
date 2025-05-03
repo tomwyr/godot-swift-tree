@@ -22,7 +22,7 @@ let package = Package(
     .testTarget(
       name: "GodotSwiftTreeTests",
       dependencies: ["GodotSwiftTree"],
-      exclude: ["Resources", "NodeTreeGenerator.dylib"]
+      exclude: ["Resources", "libGodotNodeTreeCore.dylib"]
     ),
   ]
 )
