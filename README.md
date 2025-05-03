@@ -28,7 +28,7 @@ Configure plugin in the `Package.swift` file:
 // Add plugin dependency
 let package = Package(
     dependencies: [
-        .package(url: "https://github.com/tomwyr/godot-swift-tree", branch: "master"),
+        .package(url: "https://github.com/tomwyr/godot-swift-tree", from: "1.0.0"),
     ]
 )
 
@@ -40,13 +40,19 @@ No additional setup of the Godot project is needed.
 
 ## Usage
 
-Create a scene with nodes in Godot Editor and run `generate-node-tree` plugin command:
+Create a scene with nodes in Godot Editor and run `GenerateNodeTree` plugin command:
 
 ```
-swift package generate-node-tree --allow-writing-to-package-directory
+swift run GenerateNodeTree
 ```
 
-The output path for the generated file can be specified by adding `--output-dir <directory-path>`.
+Optional configuration:
+
+* **--project-path \<project-path>**  
+    Relative path to the directory containing the Godot project.
+
+* **--output-dir \<output-dir>**  
+    Relative path to the directory where the node tree code will be generated.
 
 ![image](https://github.com/tomwyr/godot-kotlin-tree/assets/9600796/5231f627-2db4-48e3-9b31-57eff7949f77)
 

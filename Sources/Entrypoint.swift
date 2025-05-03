@@ -6,7 +6,7 @@ struct GodotSwiftTree: ParsableCommand {
   @Option(help: "Relative path to the directory containing the Godot project.")
   var projectPath: String? = nil
 
-  @Option(help: "The relative path to the directory where the node tree code will be generated.")
+  @Option(help: "Relative path to the directory where the node tree code will be generated.")
   var outputDir: String? = nil
 
   func run() throws(GodotSwiftTreeError) {

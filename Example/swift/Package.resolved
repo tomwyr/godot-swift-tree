@@ -1,13 +1,13 @@
 {
-  "originHash" : "4af3294557c1be81b8f2114f531228bff01cfaab841ad3e8488bee9b32533636",
+  "originHash" : "c8f2eadd37504188494ed62387e58dd938957f48c6e1ab9aa1d945a6251fac7a",
   "pins" : [
     {
       "identity" : "godot-swift-tree",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tomwyr/godot-swift-tree",
       "state" : {
-        "branch" : "master",
-        "revision" : "98c9b60cabfcf596d6d24fab0104847c3a2178a8"
+        "revision" : "ca0adb927c84acb8cb7bf316041d5b844c6d8e86",
+        "version" : "1.0.0"
       }
     },
     {
