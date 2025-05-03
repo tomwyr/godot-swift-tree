@@ -32,7 +32,7 @@ final class GodotSwiftTreeTests: XCTestCase {
   }
 
   private func setUpTestCommand(testCase: String) throws -> GenerateTreeCommand {
-    let libPath = URL(filePath: "Tests").appending(path: "NodeTreeGenerator.dylib").path()
+    let libPath = URL(filePath: "Tests").appending(path: "libGodotNodeTreeCore.dylib").path()
     let testCaseDir = URL(filePath: "Tests").appending(components: "Resources", testCase)
     let projectPath = testCaseDir.appending(path: "scenes").path()
     let outputPath = testCaseDir.appending(path: "Actual").path()
