@@ -41,12 +41,7 @@ extension GenerateTreeCommand {
       url = url.appending(path: projectPath)
     }
     url = url.appending(path: "project.godot")
-    let path = url.path()
-
-    guard FileManager.default.fileExists(atPath: path) else {
-      throw .invalidGodotProject
-    }
-    return path
+    return url.path()
   }
 
   static private func getOutputPath(_ input: GodotSwiftTreeInput) -> String {

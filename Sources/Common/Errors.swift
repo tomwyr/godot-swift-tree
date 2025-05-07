@@ -1,30 +1,28 @@
 enum GodotSwiftTreeError: Error, CustomStringConvertible {
-  case invalidGodotProject
   case invalidLibResource
   case generatorUnavailable(path: String)
   case generatorUnexpectedResult
-  case generatorError(cause: GodotNodeTreeError)
   case writingTreeFailed(path: String)
+  case generatorError(cause: GodotNodeTreeError)
 
   var description: String {
     switch self {
-    case .invalidGodotProject:
-      "The project in which GodotNodeTree annotation was used isn't a valid Godot project directory."
     case .invalidLibResource:
       "The resource for the node tree generator library could not be located."
     case let .generatorUnavailable(path):
       "The node tree generator library is invalid or missing (expected at `\(path)`)."
     case .generatorUnexpectedResult:
       "The node tree generator returned an unexpected result data."
-    case let .generatorError(cause: cause):
-      cause.localizedDescription
     case let .writingTreeFailed(path):
       "Unable to write generated node tree at `\(path)`."
+    case let .generatorError(cause: cause):
+      cause.localizedDescription
     }
   }
 }
 
 enum GodotNodeTreeError: Error, CustomStringConvertible, Codable {
+  case invalidGodotProject(projectPath: String)
   case scanningScenesFailed(projectPath: String)
   case readingSceneFailed(scenePath: String)
   case unexpectedNodeParameters(nodeParams: NodeParams)
@@ -33,6 +31,8 @@ enum GodotNodeTreeError: Error, CustomStringConvertible, Codable {
 
   var description: String {
     switch self {
+    case let .invalidGodotProject(projectPath):
+      "Godot project could not be found at path `\(projectPath)`."
     case let .scanningScenesFailed(projectPath):
       "Unable to scan scene files for project at `\(projectPath)`."
     case let .readingSceneFailed(scenePath):
