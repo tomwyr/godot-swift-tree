@@ -1,9 +1,14 @@
 import Darwin
 import Foundation
 
-func generateNodeTree(libPath: String, projectPath: String) throws(GodotSwiftTreeError) -> NodeTree
+func generateNodeTree(libPath: String, projectPath: String, validateProjectPath: Bool)
+  throws(GodotSwiftTreeError) -> NodeTree
 {
-  let resultStr = try callGenerateNodeTree(libPath: libPath, projectPath: projectPath)
+  let resultStr = try callGenerateNodeTree(
+    libPath: libPath,
+    projectPath: projectPath,
+    validateProjectPath: validateProjectPath,
+  )
   guard let result = Result<NodeTree, GodotNodeTreeError>(json: resultStr) else {
     throw .generatorUnexpectedResult
   }
@@ -14,7 +19,7 @@ func generateNodeTree(libPath: String, projectPath: String) throws(GodotSwiftTre
   }
 }
 
-private func callGenerateNodeTree(libPath: String, projectPath: String)
+private func callGenerateNodeTree(libPath: String, projectPath: String, validateProjectPath: Bool)
   throws(GodotSwiftTreeError) -> String
 {
   guard let handle = dlopen(libPath, RTLD_NOW) else {
@@ -30,11 +35,11 @@ private func callGenerateNodeTree(libPath: String, projectPath: String)
   let projectPathPtr = strdup(projectPath)!
   defer { free(projectPathPtr) }
 
-  let resultPtr = cGenerateNodeTree(projectPathPtr)
+  let resultPtr = cGenerateNodeTree(projectPathPtr, validateProjectPath)
   defer { free(UnsafeMutableRawPointer(mutating: resultPtr)) }
 
   return String(cString: resultPtr)
 }
 
-private typealias ResolveProjectTree = @convention(c) (UnsafePointer<CChar>) ->
+private typealias ResolveProjectTree = @convention(c) (UnsafePointer<CChar>, Bool) ->
   UnsafeMutablePointer<CChar>

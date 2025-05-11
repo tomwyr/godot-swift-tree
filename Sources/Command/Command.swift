@@ -3,10 +3,15 @@ import Foundation
 struct GenerateTreeCommand {
   let libPath: String
   let projectPath: String
+  let validateProjectPath: Bool
   let outputPath: String
 
   func run() throws(GodotSwiftTreeError) {
-    let tree = try generateNodeTree(libPath: libPath, projectPath: projectPath)
+    let tree = try generateNodeTree(
+      libPath: libPath,
+      projectPath: projectPath,
+      validateProjectPath: validateProjectPath,
+    )
     let content = NodeTreeRenderer().render(tree: tree)
     try NodeTreeWriter().write(content: content, at: outputPath)
   }
@@ -17,6 +22,7 @@ extension GenerateTreeCommand {
     self.init(
       libPath: try Self.getLibPath(),
       projectPath: try Self.getProjectPath(input),
+      validateProjectPath: input.validateProjectPath,
       outputPath: Self.getOutputPath(input)
     )
   }

@@ -32,21 +32,25 @@ final class GodotSwiftTreeTests: XCTestCase {
   }
 
   private func setUpTestCommand(testCase: String) throws -> GenerateTreeCommand {
-    let libPath = URL(filePath: "Tests").appending(path: "libGodotNodeTreeCore.dylib").path()
-    let testCaseDir = URL(filePath: "Tests").appending(components: "Resources", testCase)
-    let projectPath = testCaseDir.appending(path: "scenes").path()
-    let outputPath = testCaseDir.appending(path: "Actual").path()
+    let resourcesDir = URL(filePath: "Tests").appending(components: "Resources")
+    let libPath = resourcesDir.appending(path: "libGodotNodeTreeCore.dylib").path()
+    let projectPath = resourcesDir.appending(components: testCase, "scenes").path()
+    let outputPath = resourcesDir.appending(components: testCase, "Actual").path()
 
     return GenerateTreeCommand(
       libPath: libPath,
       projectPath: projectPath,
+      validateProjectPath: false,
       outputPath: outputPath
     )
   }
 
   private func cleanUpTestProject(_ command: GenerateTreeCommand) throws {
+    let fm = FileManager.default
     let outputFilePath = URL(filePath: command.outputPath)
-    try FileManager.default.removeItem(at: outputFilePath)
+    if fm.fileExists(atPath: outputFilePath.path()) {
+      try fm.removeItem(at: outputFilePath)
+    }
   }
 
   private func assertGeneratedOutput(_ command: GenerateTreeCommand) throws {

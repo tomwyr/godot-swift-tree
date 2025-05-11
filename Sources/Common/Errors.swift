@@ -16,7 +16,7 @@ enum GodotSwiftTreeError: Error, CustomStringConvertible {
     case let .writingTreeFailed(path):
       "Unable to write generated node tree at `\(path)`."
     case let .generatorError(cause: cause):
-      cause.localizedDescription
+      cause.description
     }
   }
 }
