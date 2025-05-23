@@ -1,3 +1,5 @@
+import UnionCodable
+
 enum GodotSwiftTreeError: Error, CustomStringConvertible {
   case invalidLibResource
   case generatorUnavailable(path: String)
@@ -21,6 +23,7 @@ enum GodotSwiftTreeError: Error, CustomStringConvertible {
   }
 }
 
+@UnionCodable(discriminator: "errorType")
 enum GodotNodeTreeError: Error, CustomStringConvertible, Codable {
   case invalidGodotProject(projectPath: String)
   case scanningScenesFailed(projectPath: String)

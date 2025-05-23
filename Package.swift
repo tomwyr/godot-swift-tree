@@ -9,20 +9,22 @@ let package = Package(
     .executable(name: "GenerateNodeTree", targets: ["GodotSwiftTree"])
   ],
   dependencies: [
-    .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0")
+    .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
+    .package(url: "https://github.com/tomwyr/union-codable", from: "1.0.0"),
   ],
   targets: [
     .executableTarget(
       name: "GodotSwiftTree",
       dependencies: [
-        .product(name: "ArgumentParser", package: "swift-argument-parser")
+        .product(name: "ArgumentParser", package: "swift-argument-parser"),
+        .product(name: "UnionCodable", package: "union-codable"),
       ],
-      resources: [.copy("Resources")]
+      resources: [.copy("Resources")],
     ),
     .testTarget(
       name: "GodotSwiftTreeTests",
       dependencies: ["GodotSwiftTree"],
-      exclude: ["Resources"]
+      exclude: ["Resources"],
     ),
-  ]
+  ],
 )

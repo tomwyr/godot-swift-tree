@@ -1,3 +1,5 @@
+import UnionCodable
+
 struct NodeTree: Codable {
   let scenes: [Scene]
 }
@@ -14,6 +16,7 @@ struct Scene: Codable {
   let root: NodeType
 }
 
+@UnionCodable(discriminator: "nodeType")
 enum NodeType: Codable {
   case parentNode(ParentNode)
   case leafNode(LeafNode)

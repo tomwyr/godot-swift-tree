@@ -1,5 +1,5 @@
 {
-  "originHash" : "c8f8fbdac86cce11cd234c691dff7634ebd8e3bd96dab37082db8a0b2c0357d6",
+  "originHash" : "43ddcbb57c343be587805e0821133502b4623953802604a448e457c48e0d8598",
   "pins" : [
     {
       "identity" : "swift-argument-parser",
@@ -8,6 +8,24 @@
       "state" : {
         "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
         "version" : "1.5.0"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax.git",
+      "state" : {
+        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
+        "version" : "601.0.1"
+      }
+    },
+    {
+      "identity" : "union-codable",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tomwyr/union-codable",
+      "state" : {
+        "revision" : "5dc0b1af151dfa530ffe522fd1e6bb0b11f13215",
+        "version" : "1.0.0"
       }
     }
   ],
