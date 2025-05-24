@@ -1,26 +1,27 @@
 import Foundation
-import XCTest
+import Testing
 
 @testable import GodotSwiftTree
 
-final class GodotSwiftTreeTests: XCTestCase {
-  func testSingleSceneWithNestedNodes() throws {
+@Suite
+struct GodotSwiftTreeTests {
+  @Test func testSingleSceneWithNestedNodes() throws {
     try test(testCase: "physics-test")
   }
 
-  func testSpacesInNodeNames() throws {
+  @Test func testSpacesInNodeNames() throws {
     try test(testCase: "simple")
   }
 
-  func testMultipleIndependentScenes() throws {
+  @Test func testMultipleIndependentScenes() throws {
     try test(testCase: "scene-changer")
   }
 
-  func testSceneWithNestedScenes() throws {
+  @Test func testSceneWithNestedScenes() throws {
     try test(testCase: "waypoints")
   }
 
-  func testMultipleScenes() throws {
+  @Test func testMultipleScenes() throws {
     try test(testCase: "dodge-the-creeps")
   }
 
@@ -61,6 +62,6 @@ final class GodotSwiftTreeTests: XCTestCase {
     let expected = try String(contentsOfFile: expectedPath, encoding: .utf8)
     let actual = try String(contentsOfFile: actualPath, encoding: .utf8)
 
-    XCTAssertEqual(expected, actual)
+    #expect(expected == actual)
   }
 }
