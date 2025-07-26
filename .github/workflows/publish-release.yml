@@ -62,12 +62,6 @@ jobs:
     needs: run-tests
     runs-on: ubuntu-22.04
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: core-libs
-          merge-multiple: true
-
       - name: Get release id
         id: release-id
         run: |
