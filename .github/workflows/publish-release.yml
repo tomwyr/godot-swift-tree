@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   fetch-core-libs:
-    runs-on: macos-14
+    runs-on: ubuntu-22.04
     env:
       CORE_LIB_REPO: tomwyr/godot-node-tree-core
     steps:
