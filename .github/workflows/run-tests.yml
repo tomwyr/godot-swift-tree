@@ -7,7 +7,7 @@ on:
 
 jobs:
   fetch-core-libs:
-    runs-on: ubuntu-22.04
+    runs-on: macos-14
     env:
       CORE_LIB_REPO: tomwyr/godot-node-tree-core
     steps:
@@ -22,8 +22,8 @@ jobs:
         run: scripts/download-core-libs.sh
         env:
           CORE_LIB_VERSION: ${{ steps.resolve-version.outputs.core_lib_version }}
-          TARGET_PLATFORMS: "macos linux windows"
-          LIB_EXTENSIONS: ".dylib .so .dll"
+          TARGET_PLATFORMS: "macos" # "macos linux windows"
+          LIB_EXTENSIONS: ".dylib" # ".dylib .so .dll"
 
       - name: Upload core libs artifacts
         uses: actions/upload-artifact@v4
@@ -33,7 +33,7 @@ jobs:
   
   run-tests:
     needs: fetch-core-libs
-    runs-on: ubuntu-22.04
+    runs-on: macos-14
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
