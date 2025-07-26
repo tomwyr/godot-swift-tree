@@ -1,0 +1,54 @@
+name: Run tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  fetch-core-libs:
+    runs-on: ubunt-22.04
+    env:
+      CORE_LIB_REPO: tomwyr/godot-node-tree-core
+
+    steps:
+      - name: Resolve core lib version
+        id: resolve-version
+        run: scripts/resolve-core-lib-version.sh
+
+      - name: Fetch core libs
+        run: scripts/fetch-core-libs.sh
+        env:
+          CORE_LIB_VERSION: ${{ steps.resolve-version.outputs.core_lib_version }}
+          TARGET_PLATFORMS: ("macos" "linux" "windows")
+          LIB_EXTENSIONS: (".dylib" ".so" ".dll")
+
+      - name: Upload core libs artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-libs
+          path: core-libs
+  
+  run-tests:
+    needs: fetch-core-libs
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download core libs artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: core-libs
+          path: core-libs
+        
+      - name: Restore core libs
+        run: scripts/copy-core-libs.sh
+
+      - name: Setup Swift
+        uses: SwiftyLab/setup-swift@latest
+        with:
+          swift-version: "6.1.0"
+
+      - name: Run tests
+        run: swift test
