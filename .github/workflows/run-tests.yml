@@ -18,8 +18,8 @@ jobs:
         id: resolve-version
         run: scripts/resolve-core-lib-version.sh
 
-      - name: Fetch core libs
-        run: scripts/fetch-core-libs.sh
+      - name: Download core libs
+        run: scripts/download-core-libs.sh
         env:
           CORE_LIB_VERSION: ${{ steps.resolve-version.outputs.core_lib_version }}
           TARGET_PLATFORMS: "macos linux windows"

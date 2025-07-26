@@ -16,7 +16,7 @@ for i in ${!TARGET_PLATFORMS_ARR[@]}; do
 
   echo "Downloading $file_name from $url"
   dest_path="core-libs/libGodotNodeTreeCore$lib_ext"
-  curl -f -s -o "$dest_path" "$url"
+  curl -f -L -s -o "$dest_path" "$url"
   
   if [[ ! -f "$dest_path" ]]; then
     echo "Failed to download $dest_path" >&2
