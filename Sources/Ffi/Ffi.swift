@@ -1,4 +1,3 @@
-import Darwin
 import Foundation
 
 func generateNodeTree(libPath: String, projectPath: String, validateProjectPath: Bool)

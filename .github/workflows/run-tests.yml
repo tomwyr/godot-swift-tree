@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       CORE_LIB_REPO: tomwyr/godot-node-tree-core
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

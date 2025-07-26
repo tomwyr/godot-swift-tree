@@ -34,7 +34,8 @@ struct GodotSwiftTreeTests {
 
   private func setUpTestCommand(testCase: String) throws -> GenerateTreeCommand {
     let resourcesDir = URL(filePath: "Tests").appending(components: "Resources")
-    let libPath = resourcesDir.appending(path: "libGodotNodeTreeCore.dylib").path()
+    let fileName = "libGodotNodeTreeCore" + getLibExtension()
+    let libPath = resourcesDir.appending(path: fileName).path()
     let projectPath = resourcesDir.appending(components: testCase, "scenes").path()
     let outputPath = resourcesDir.appending(components: testCase, "Actual").path()
 
@@ -44,6 +45,18 @@ struct GodotSwiftTreeTests {
       validateProjectPath: false,
       outputPath: outputPath
     )
+  }
+
+  private func getLibExtension() -> String {
+    #if os(macOS)
+      ".dylib"
+    #elseif os(Linux)
+      ".so"
+    #elseif os(Windows)
+      ".dll"
+    #else
+      #error("Unsupported OS")
+    #endif
   }
 
   private func cleanUpTestProject(_ command: GenerateTreeCommand) throws {
