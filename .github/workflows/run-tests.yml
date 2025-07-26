@@ -7,11 +7,14 @@ on:
 
 jobs:
   fetch-core-libs:
-    runs-on: ubunt-22.04
+    runs-on: ubuntu-22.04
     env:
       CORE_LIB_REPO: tomwyr/godot-node-tree-core
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Resolve core lib version
         id: resolve-version
         run: scripts/resolve-core-lib-version.sh
@@ -20,8 +23,8 @@ jobs:
         run: scripts/fetch-core-libs.sh
         env:
           CORE_LIB_VERSION: ${{ steps.resolve-version.outputs.core_lib_version }}
-          TARGET_PLATFORMS: ("macos" "linux" "windows")
-          LIB_EXTENSIONS: (".dylib" ".so" ".dll")
+          TARGET_PLATFORMS: "macos linux windows"
+          LIB_EXTENSIONS: ".dylib .so .dll"
 
       - name: Upload core libs artifacts
         uses: actions/upload-artifact@v4

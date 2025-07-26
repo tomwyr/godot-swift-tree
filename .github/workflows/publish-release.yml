@@ -7,7 +7,7 @@ on:
 
 jobs:
   fetch-core-libs:
-    runs-on: ubunt-22.04
+    runs-on: ubuntu-22.04
     env:
       CORE_LIB_REPO: tomwyr/godot-node-tree-core
 
