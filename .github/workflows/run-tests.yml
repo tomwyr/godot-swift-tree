@@ -45,7 +45,7 @@ jobs:
           path: core-libs
         
       - name: Restore core libs
-        run: scripts/copy-core-libs.sh
+        run: scripts/restore-core-libs.sh
 
       - name: Setup Swift
         uses: SwiftyLab/setup-swift@latest
