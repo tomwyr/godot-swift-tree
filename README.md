@@ -1,5 +1,8 @@
 # Godot Swift Tree
 
+> [!Important]
+> The current version of the project has been tested on macOS and **may not work properly** on Linux and Windows.
+
 Godot Swift Tree enhances development of Godot games using Swift bindings by generating a statically typed object mapping the Godot project nodes to Swift.
 
 In short, instead of referencing node with a string path and casting:
