@@ -1,6 +1,7 @@
 # 1.1.1 - 2026-05-24
 
 - Fixed validating project path
+- Fixed coflicting dependency versions
 
 # 1.1.0 - 2025-07-26
 
