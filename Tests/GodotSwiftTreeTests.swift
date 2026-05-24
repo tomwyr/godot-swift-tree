@@ -36,13 +36,13 @@ struct GodotSwiftTreeTests {
     let resourcesDir = URL(filePath: "Tests").appending(components: "Resources")
     let fileName = "libGodotNodeTreeCore" + getLibExtension()
     let libPath = resourcesDir.appending(path: fileName).path()
-    let projectPath = resourcesDir.appending(components: testCase, "scenes").path()
+    let projectPath = resourcesDir.appending(components: testCase).path()
     let outputPath = resourcesDir.appending(components: testCase, "Actual").path()
 
     return GenerateTreeCommand(
       libPath: libPath,
       projectPath: projectPath,
-      validateProjectPath: false,
+      validateProjectPath: true,
       outputPath: outputPath
     )
   }
