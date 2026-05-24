@@ -46,7 +46,6 @@ extension GenerateTreeCommand {
     if let projectPath = input.projectPath {
       url = url.appending(path: projectPath)
     }
-    url = url.appending(path: "project.godot")
     return url.path()
   }
 
