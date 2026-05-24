@@ -31,7 +31,7 @@ Configure plugin in the `Package.swift` file:
 // Add plugin dependency
 let package = Package(
     dependencies: [
-        .package(url: "https://github.com/tomwyr/godot-swift-tree", from: "1.0.0"),
+        .package(url: "https://github.com/tomwyr/godot-swift-tree", from: "1.1.1"),
     ]
 )
 
