@@ -15,7 +15,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/migueldeicaza/SwiftGodot", branch: "main"),
-        .package(url: "https://github.com/tomwyr/godot-swift-tree", from: "1.1.1"),
+        .package(url: "https://github.com/tomwyr/godot-swift-tree", from: "1.2.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.

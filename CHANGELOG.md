@@ -1,3 +1,7 @@
+# 1.2.0 - 2026-05-24
+
+- Made project compatible with Godot 4.6
+
 # 1.1.1 - 2026-05-24
 
 - Fixed validating project path
